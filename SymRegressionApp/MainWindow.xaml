@@ -1,0 +1,32 @@
+﻿<Window x:Class="SymRegressionApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SymRegressionApp"
+        mc:Ignorable="d"
+        Title="SymRegressionApp" Height="450" Width="800" WindowState="Maximized">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Menu>
+            <MenuItem Header="File">
+                <MenuItem Header="Import" Name="mnuImport" Click="mnuImport_Click"/>
+            </MenuItem>
+            <MenuItem Header="Windows">
+                <MenuItem Header="Process Data" Name="mnuProcessData" Click="mnuProcessData_Click"/>
+                <MenuItem Header="Forecasting" Name="mnuForecasting" Click="mnuForecasting_Click"/>
+                <MenuItem Header="Options" Name="mnuOptions" Click="mnuOptions_Click"/>
+            </MenuItem>
+        </Menu>
+        <StackPanel Orientation="Horizontal" Grid.Row="1">
+            <Button Name="btnStart" Click="btnStart_Click" Margin="5">Start</Button>
+            <Button Name="btnStop"  Click="btnStop_Click" Margin="5">Stop</Button>
+            <Button Name="btnCopy" Click="btnCopy_Click" Margin="5">Copy</Button>
+            </StackPanel>
+        <TextBox Name="txtMain" AcceptsReturn="True" Grid.Row="2" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible"/>
+    </Grid>
+</Window>

@@ -1,0 +1,30 @@
+﻿<Window x:Class="SymRegressionApp.ProcessDataWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SymRegressionApp"
+        mc:Ignorable="d"
+        Title="ProcessDataWindow" Height="450" Width="800" WindowState="Maximized">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <Button Name="btnImport" Click="btnImport_Click" Margin="5"> Import </Button>
+            <Button Name="btnFindCategories" Click="btnFindCategories_Click" Margin="5"> Find Categories </Button>
+            <Button Name="btnExpandCategories" Click="btnExpandCategories_Click" Margin="5"> Expand Categories </Button>
+        </StackPanel>
+        <DataGrid Name="gridMain" Grid.Row="1"/>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button Name="btnProcessDataAndSave" Click="btnProcessDataAndSave_Click">Process Data and Save</Button>
+            <Button Name="btnSaveProcessDefinition" Click="btnSaveProcessDefinition_Click" Grid.Column="1">Save Process Definition</Button>
+        </Grid>
+    </Grid>
+</Window>

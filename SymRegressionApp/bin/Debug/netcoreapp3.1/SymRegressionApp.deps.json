@@ -1,0 +1,125 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v3.1",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v3.1": {
+      "SymRegressionApp/1.0.0": {
+        "dependencies": {
+          "ILGPU": "0.8.0",
+          "SymAI": "1.0.0",
+          "ILGPU.Reference": "0.8.0.0"
+        },
+        "runtime": {
+          "SymRegressionApp.dll": {}
+        }
+      },
+      "ILGPU/0.8.0": {
+        "dependencies": {
+          "System.Collections.Immutable": "1.7.0",
+          "System.Reflection.Metadata": "1.8.0",
+          "System.Runtime.CompilerServices.Unsafe": "4.5.2"
+        }
+      },
+      "ILGPU.Algorithms/0.8.0": {
+        "dependencies": {
+          "ILGPU": "0.8.0",
+          "System.Numerics.Vectors": "4.5.0"
+        }
+      },
+      "System.Collections.Immutable/1.7.0": {},
+      "System.Numerics.Vectors/4.5.0": {},
+      "System.Reflection.Metadata/1.8.0": {},
+      "System.Runtime.CompilerServices.Unsafe/4.5.2": {},
+      "Sym/1.0.0": {
+        "runtime": {
+          "Sym.dll": {}
+        }
+      },
+      "SymAI/1.0.0": {
+        "dependencies": {
+          "ILGPU": "0.8.0",
+          "ILGPU.Algorithms": "0.8.0",
+          "Sym": "1.0.0"
+        },
+        "runtime": {
+          "SymAI.dll": {}
+        }
+      },
+      "ILGPU.Reference/0.8.0.0": {
+        "runtime": {
+          "ILGPU.dll": {
+            "assemblyVersion": "0.8.0.0",
+            "fileVersion": "0.8.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "SymRegressionApp/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "ILGPU/0.8.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-UljqGpp4mPPmYEtIo9excDqFCec+ApI+nQaBwRm/nVn6pCHRmIFXLf8OYfrNr0U7WHLrjWypMm7qhCGfLIbJMQ==",
+      "path": "ilgpu/0.8.0",
+      "hashPath": "ilgpu.0.8.0.nupkg.sha512"
+    },
+    "ILGPU.Algorithms/0.8.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-oQSQtksdO+hgYEHrIRmzcz4gvP4w5Q3M2mimW67LqDw5gD4Gq58J4/mEsbBM3Ptrwv9DmpUqLXCH3ZLVK6CBHA==",
+      "path": "ilgpu.algorithms/0.8.0",
+      "hashPath": "ilgpu.algorithms.0.8.0.nupkg.sha512"
+    },
+    "System.Collections.Immutable/1.7.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-RVSM6wZUo6L2y6P3vN6gjUtyJ2IF2RVtrepF3J7nrDKfFQd5u/SnSUFclchYQis8/k5scHy9E+fVeKVQLnnkzw==",
+      "path": "system.collections.immutable/1.7.0",
+      "hashPath": "system.collections.immutable.1.7.0.nupkg.sha512"
+    },
+    "System.Numerics.Vectors/4.5.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-QQTlPTl06J/iiDbJCiepZ4H//BVraReU4O4EoRw1U02H5TLUIT7xn3GnDp9AXPSlJUDyFs4uWjWafNX6WrAojQ==",
+      "path": "system.numerics.vectors/4.5.0",
+      "hashPath": "system.numerics.vectors.4.5.0.nupkg.sha512"
+    },
+    "System.Reflection.Metadata/1.8.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-RRnWHNjNmb14+S+INsYe1A0b+q05uzLNzENcKe1GCkXT2gaKCjPxVc5TsLVgFZdAAPREnLHFohVbo6bGzEWFlA==",
+      "path": "system.reflection.metadata/1.8.0",
+      "hashPath": "system.reflection.metadata.1.8.0.nupkg.sha512"
+    },
+    "System.Runtime.CompilerServices.Unsafe/4.5.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-wprSFgext8cwqymChhrBLu62LMg/1u92bU+VOwyfBimSPVFXtsNqEWC92Pf9ofzJFlk4IHmJA75EDJn1b2goAQ==",
+      "path": "system.runtime.compilerservices.unsafe/4.5.2",
+      "hashPath": "system.runtime.compilerservices.unsafe.4.5.2.nupkg.sha512"
+    },
+    "Sym/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "SymAI/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "ILGPU.Reference/0.8.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

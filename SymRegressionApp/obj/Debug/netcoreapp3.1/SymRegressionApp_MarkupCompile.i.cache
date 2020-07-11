@@ -1,0 +1,20 @@
+﻿SymRegressionApp
+1.0.0.0
+
+winexe
+C#
+.cs
+C:\Users\warre\Desktop\Code 2020\Sym\SymRegressionApp\obj\Debug\netcoreapp3.1\
+SymRegressionApp
+none
+false
+TRACE;DEBUG;NETCOREAPP;NETCOREAPP3_1
+C:\Users\warre\Desktop\Code 2020\Sym\SymRegressionApp\App.xaml
+5-707867438
+
+201687209802
+195111819603
+ForecastingWindow.xaml;InputBox.xaml;MainWindow.xaml;OptionsWindow.xaml;ProcessDataWindow.xaml;
+
+False
+

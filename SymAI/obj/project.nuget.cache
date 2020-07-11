@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "dgSpecHash": "4J4NBY5CDl1W2hpFxyIdUN0iu/OEKaXR9lJKfbWHYdb9mASlVigFSEZlA/hh+2m+sdW9gxzQ1ApmV5D1wEtlUg==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\warre\\Desktop\\Code 2020\\Sym\\SymAI\\SymAI.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\warre\\.nuget\\packages\\ilgpu\\0.8.0\\ilgpu.0.8.0.nupkg.sha512",
+    "C:\\Users\\warre\\.nuget\\packages\\ilgpu.algorithms\\0.8.0\\ilgpu.algorithms.0.8.0.nupkg.sha512",
+    "C:\\Users\\warre\\.nuget\\packages\\system.buffers\\4.4.0\\system.buffers.4.4.0.nupkg.sha512",
+    "C:\\Users\\warre\\.nuget\\packages\\system.collections.immutable\\1.7.0\\system.collections.immutable.1.7.0.nupkg.sha512",
+    "C:\\Users\\warre\\.nuget\\packages\\system.memory\\4.5.3\\system.memory.4.5.3.nupkg.sha512",
+    "C:\\Users\\warre\\.nuget\\packages\\system.numerics.vectors\\4.5.0\\system.numerics.vectors.4.5.0.nupkg.sha512",
+    "C:\\Users\\warre\\.nuget\\packages\\system.reflection.metadata\\1.8.0\\system.reflection.metadata.1.8.0.nupkg.sha512",
+    "C:\\Users\\warre\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\4.5.2\\system.runtime.compilerservices.unsafe.4.5.2.nupkg.sha512"
+  ],
+  "logs": []
+}

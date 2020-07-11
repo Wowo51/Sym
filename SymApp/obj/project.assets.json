@@ -1,0 +1,91 @@
+{
+  "version": 3,
+  "targets": {
+    ".NETCoreApp,Version=v3.1": {
+      "Sym/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.1",
+        "compile": {
+          "bin/placeholder/Sym.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Sym.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Sym/1.0.0": {
+      "type": "project",
+      "path": "../Sym/Sym.csproj",
+      "msbuildProject": "../Sym/Sym.csproj"
+    }
+  },
+  "projectFileDependencyGroups": {
+    ".NETCoreApp,Version=v3.1": [
+      "Sym >= 1.0.0"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\warre\\.nuget\\packages\\": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "C:\\Users\\warre\\Desktop\\Code 2020\\Sym\\SymApp\\SymApp.csproj",
+      "projectName": "SymApp",
+      "projectPath": "C:\\Users\\warre\\Desktop\\Code 2020\\Sym\\SymApp\\SymApp.csproj",
+      "packagesPath": "C:\\Users\\warre\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\warre\\Desktop\\Code 2020\\Sym\\SymApp\\obj\\",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "C:\\Users\\warre\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "netcoreapp3.1"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "projectReferences": {
+            "C:\\Users\\warre\\Desktop\\Code 2020\\Sym\\Sym\\Sym.csproj": {
+              "projectPath": "C:\\Users\\warre\\Desktop\\Code 2020\\Sym\\Sym\\Sym.csproj"
+            }
+          }
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      }
+    },
+    "frameworks": {
+      "netcoreapp3.1": {
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          },
+          "Microsoft.WindowsDesktop.App.WPF": {
+            "privateAssets": "none"
+          }
+        },
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.301\\RuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}

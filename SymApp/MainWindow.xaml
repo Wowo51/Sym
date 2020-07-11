@@ -1,0 +1,112 @@
+﻿<Window x:Class="SymApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SymApp"
+        mc:Ignorable="d"
+        Title="SymApp" Height="450" Width="800" WindowState="Maximized">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="35" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Menu Margin="5">
+            <MenuItem Header="File">
+                <MenuItem Header="New" Name="FileNew" Click="FileNew_Click" />
+                <MenuItem Header="Open" Name="FileOpen" Click="FileOpen_Click" />
+                <MenuItem Header="Save" Name="FileSave" Click="FileSave_Click" />
+                <MenuItem Header="Save As" Name="FileSaveAs" Click="FileSaveAs_Click" />
+                <MenuItem Header="Quit" Name="FileQuit" Click="FileQuit_Click" />
+            </MenuItem>
+            <MenuItem Header="Edit" >
+                <MenuItem Header="Select All" Name="mnuSelectAll" Click="mnuSelectAll_Click" />
+            </MenuItem>
+            <MenuItem Header="Tabs" >
+                <MenuItem Header="New" Name="mnuTabNew" Click="mnuTabNew_Click" />
+                <MenuItem Header="Delete" Name="mnuTabDelete" Click="mnuTabDelete_Click"/>
+                <MenuItem Header="Rename" Name="mnuRenameTab" Click="mnuRenameTab_Click"/>
+            </MenuItem>
+            <MenuItem Header="TransformTabs" >
+                <MenuItem Header="New" Name="mnuTransformTabNew" Click="mnuTransformTabNew_Click" />
+                <MenuItem Header="Delete" Name="mnuTransformTabDelete" Click="mnuTransformTabDelete_Click"/>
+                <MenuItem Header="Rename" Name="mnuRenameTransformTab" Click="mnuRenameTransformTab_Click"/>
+            </MenuItem>
+            <MenuItem Header="Windows" >
+                <MenuItem Header="Test Transforms" Name="mnuTest" Click="mnuTest_Click"/>
+                <MenuItem Header="Solver Options" Name="mnuSolverOptions" Click="mnuSolverOptions_Click"/>
+            </MenuItem>
+            <MenuItem Header="Help" >
+                <MenuItem Header="Help" Name="HelpHelp" Click="HelpHelp_Click" />
+                <MenuItem Header="SymbolicComputation.com" Name="SymHome" Click="SymHome_Click" />
+                <MenuItem Header="About" Name="HelpAbout" Click="HelpAbout_Click" />
+            </MenuItem>
+        </Menu>
+        <ToolBarTray Grid.Row="1" Margin="5" Background="LightGray">
+            <ToolBar Background="LightGray" Foreground="LightGray">
+                <Button Name="btnTransform" Click="btnTransform_Click" VerticalAlignment="Bottom">Transform</Button>
+                <Button Name="btnEval" Click="btnEval_Click">Evaluate</Button>
+                <Button Name="btnSimplify" Click="btnSimplify_Click">Simplify</Button>
+                <Button Name="btnSubstitute" Click="btnSubstitute_Click">Substitute</Button>
+                <Button Name="btnIsolate" Click="btnIsolate_Click">Isolate</Button>
+                <Button Name="btnCopyLine" Click="btnCopyLine_Click">CopyLine</Button>
+                <Button Name="btnDerivative" Click="btnDerivative_Click">Derivative</Button>
+                <Button Name="btnPartialDerivative" Click="btnPartialDerivative_Click">PartialDerivative</Button>
+                <Button Name="btnTransformBranches" Click="btnTransformBranches_Click">TransformBranches</Button>
+                <Button Name="btnSolveSystem" Click="btnSolveSystem_Click">SolveSystem</Button>
+                <Button Name="btnStopSolving" Click="btnStopSolving_Click">StopSolving</Button>
+            </ToolBar>
+        </ToolBarTray>
+        <Grid Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="400" />
+            </Grid.ColumnDefinitions>
+            <GroupBox Header="Workspaces">
+                <TabControl  Name="tabControl1" Margin="5">
+
+                </TabControl>
+            </GroupBox>
+            <GroupBox Header="Transforms" Grid.Column="1">
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="45" />
+                    </Grid.RowDefinitions>
+                    <TabControl Name="tabControlTransforms" Margin="5">
+                        <TabItem Name="tabItemAlgebra" Header="Algebra">
+                            <TabControl Name="tabControlAlgebra" Margin="0,0,10,10">
+                            </TabControl>
+                        </TabItem>
+                        <TabItem Name="tabItemCalculus" Header="Calculus">
+                            <TabControl Name="tabControlCalculus" Margin="5">
+                            </TabControl>
+                        </TabItem>
+                        <TabItem Name="tabItemVector" Header="Vector">
+                            <TabControl Name="tabControlVector" Margin="5">
+                            </TabControl>
+                        </TabItem>
+                        <TabItem Name="tabItemMatrix" Header="Matrix">
+                            <TabControl Name="tabControlMatrix" Margin="5">
+                            </TabControl>
+                        </TabItem>
+                        <TabItem Name="tabItemTensor" Header="Tensor">
+                            <TabControl Name="tabControlTensor" Margin="5">
+                            </TabControl>
+                        </TabItem>
+                        <TabItem Name="tabItemLogic" Header="Logic">
+                            <TabControl Name="tabControlLogic" Margin="5">
+                            </TabControl>
+                        </TabItem>
+                    </TabControl>
+
+                    <GroupBox Grid.Row="1" Header="Active Transform">
+                        <TextBox Name="txtActiveTransform" >a=b~b=a</TextBox>
+                    </GroupBox>
+
+                </Grid>
+            </GroupBox>
+        </Grid>
+    </Grid>
+</Window>

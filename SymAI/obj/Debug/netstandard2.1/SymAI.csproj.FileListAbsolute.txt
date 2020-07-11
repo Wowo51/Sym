@@ -1,0 +1,16 @@
+C:\Users\warre\Desktop\Code 2020\Sym\SymAI\bin\Debug\netstandard2.1\SymAI.deps.json
+C:\Users\warre\Desktop\Code 2020\Sym\SymAI\bin\Debug\netstandard2.1\SymAI.dll
+C:\Users\warre\Desktop\Code 2020\Sym\SymAI\bin\Debug\netstandard2.1\SymAI.pdb
+C:\Users\warre\Desktop\Code 2020\Sym\SymAI\bin\Debug\netstandard2.1\ILGPU.dll
+C:\Users\warre\Desktop\Code 2020\Sym\SymAI\bin\Debug\netstandard2.1\Sym.dll
+C:\Users\warre\Desktop\Code 2020\Sym\SymAI\bin\Debug\netstandard2.1\Sym.pdb
+C:\Users\warre\Desktop\Code 2020\Sym\SymAI\bin\Debug\netstandard2.1\ILGPU.xml
+C:\Users\warre\Desktop\Code 2020\Sym\SymAI\obj\Debug\netstandard2.1\SymAI.csprojAssemblyReference.cache
+C:\Users\warre\Desktop\Code 2020\Sym\SymAI\obj\Debug\netstandard2.1\SymAI.AssemblyInfoInputs.cache
+C:\Users\warre\Desktop\Code 2020\Sym\SymAI\obj\Debug\netstandard2.1\SymAI.AssemblyInfo.cs
+C:\Users\warre\Desktop\Code 2020\Sym\SymAI\obj\Debug\netstandard2.1\SymAI.csproj.CopyComplete
+C:\Users\warre\Desktop\Code 2020\Sym\SymAI\obj\Debug\netstandard2.1\SymAI.dll
+C:\Users\warre\Desktop\Code 2020\Sym\SymAI\obj\Debug\netstandard2.1\SymAI.pdb
+C:\Users\warre\Desktop\Code 2020\Sym\SymAI\bin\Debug\netstandard2.1\ILGPU.Algorithms.dll
+C:\Users\warre\Desktop\Code 2020\Sym\SymAI\bin\Debug\netstandard2.1\ILGPU.Algorithms.xml
+C:\Users\warre\Desktop\Code 2020\Sym\SymAI\obj\Debug\netstandard2.1\SymAI.csproj.CoreCompileInputs.cache

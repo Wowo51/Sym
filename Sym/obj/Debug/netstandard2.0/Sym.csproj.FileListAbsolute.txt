@@ -1,0 +1,9 @@
+C:\Users\warre\Desktop\Code 2020\Sym\Sym\bin\Debug\netstandard2.0\Sym.deps.json
+C:\Users\warre\Desktop\Code 2020\Sym\Sym\bin\Debug\netstandard2.0\Sym.dll
+C:\Users\warre\Desktop\Code 2020\Sym\Sym\bin\Debug\netstandard2.0\Sym.pdb
+C:\Users\warre\Desktop\Code 2020\Sym\Sym\obj\Debug\netstandard2.0\Sym.csprojAssemblyReference.cache
+C:\Users\warre\Desktop\Code 2020\Sym\Sym\obj\Debug\netstandard2.0\Sym.csproj.CoreCompileInputs.cache
+C:\Users\warre\Desktop\Code 2020\Sym\Sym\obj\Debug\netstandard2.0\Sym.AssemblyInfoInputs.cache
+C:\Users\warre\Desktop\Code 2020\Sym\Sym\obj\Debug\netstandard2.0\Sym.AssemblyInfo.cs
+C:\Users\warre\Desktop\Code 2020\Sym\Sym\obj\Debug\netstandard2.0\Sym.dll
+C:\Users\warre\Desktop\Code 2020\Sym\Sym\obj\Debug\netstandard2.0\Sym.pdb
