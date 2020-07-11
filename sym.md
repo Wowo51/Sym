@@ -33,4 +33,4 @@ Sym is designed from the ground up to be fast. It can perform thousands of eleme
 
 Keywords: Computer algebra system.
 
-[SymbolicComputation.com](SymbolicComputation.com)
+[SymbolicComputation.com](http://www.SymbolicComputation.com)
