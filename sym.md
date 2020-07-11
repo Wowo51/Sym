@@ -20,8 +20,6 @@ a and b can be entire functions, e.g:
 
 Sym can read and use transforms that use the above syntax, e.g:
 
-a\*(b+c)~a\*b+a\*c
-a\*b+a\*c~a\*(b+c)  
 a/c+b/c~(a+b)/c  
 (a+b)/c~a/c+b/c
 
