@@ -1,2 +1,4 @@
 # Sym
-Sym is under construction
+Sym, symbolic computation, symbolic regression, AI. By SymbolicComputation.com.
+
+This is the future home of Sym. Under construction.
