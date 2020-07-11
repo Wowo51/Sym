@@ -31,7 +31,7 @@ You can use the provided transforms to manually rearrange an equation, but that 
 
 Sym is designed from the ground up to be fast. It can perform thousands of elementary transforms per second with a single core. The solver is multithreaded. With large mathematical expressions you can run into a combinatorial explosion problem as the number of different permutations of a mathematical expression increases very rapidly with the size of the expression. Sym is designed to alleviate that to some extent with speed. As time goes on I'll be attempting to solve some truly difficult mathematical and physics problems.
 
-[Docs](github.com/wowo51/sym/tutorial.md)
+[Docs](symdocs.md)
 
 Keywords: Computer algebra system.
 
