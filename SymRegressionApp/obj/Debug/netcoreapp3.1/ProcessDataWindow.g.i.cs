@@ -101,7 +101,7 @@ namespace SymRegressionApp {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/SymRegressionApp;V1.0.0.0;component/processdatawindow.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/SymRegressionApp;component/processdatawindow.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\ProcessDataWindow.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);
