@@ -88,7 +88,7 @@
           "lib/netstandard2.0/System.Runtime.CompilerServices.Unsafe.dll": {}
         }
       },
-      "Sym/1.0.0": {
+      "Sym/0.1.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
         "compile": {
@@ -315,7 +315,7 @@
         "version.txt"
       ]
     },
-    "Sym/1.0.0": {
+    "Sym/0.1.0": {
       "type": "project",
       "path": "../Sym/Sym.csproj",
       "msbuildProject": "../Sym/Sym.csproj"
@@ -325,14 +325,14 @@
     ".NETStandard,Version=v2.1": [
       "ILGPU >= 0.8.0",
       "ILGPU.Algorithms >= 0.8.0",
-      "Sym >= 1.0.0"
+      "Sym >= 0.1.0"
     ]
   },
   "packageFolders": {
     "C:\\Users\\warre\\.nuget\\packages\\": {}
   },
   "project": {
-    "version": "1.0.0",
+    "version": "0.1.0",
     "restore": {
       "projectUniqueName": "C:\\Users\\warre\\Desktop\\Code 2020\\Sym\\SymAI\\SymAI.csproj",
       "projectName": "SymAI",

@@ -5,7 +5,7 @@
   },
   "projects": {
     "C:\\Users\\warre\\Desktop\\Code 2020\\Sym\\SymAI\\SymAI.csproj": {
-      "version": "1.0.0",
+      "version": "0.1.0",
       "restore": {
         "projectUniqueName": "C:\\Users\\warre\\Desktop\\Code 2020\\Sym\\SymAI\\SymAI.csproj",
         "projectName": "SymAI",
@@ -71,7 +71,7 @@
       }
     },
     "C:\\Users\\warre\\Desktop\\Code 2020\\Sym\\SymRegressionApp\\SymRegressionApp.csproj": {
-      "version": "1.0.0",
+      "version": "0.1.0",
       "restore": {
         "projectUniqueName": "C:\\Users\\warre\\Desktop\\Code 2020\\Sym\\SymRegressionApp\\SymRegressionApp.csproj",
         "projectName": "SymRegressionApp",
@@ -136,7 +136,7 @@
       }
     },
     "C:\\Users\\warre\\Desktop\\Code 2020\\Sym\\Sym\\Sym.csproj": {
-      "version": "1.0.0",
+      "version": "0.1.0",
       "restore": {
         "projectUniqueName": "C:\\Users\\warre\\Desktop\\Code 2020\\Sym\\Sym\\Sym.csproj",
         "projectName": "Sym",

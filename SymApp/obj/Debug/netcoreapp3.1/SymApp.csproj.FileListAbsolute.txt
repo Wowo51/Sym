@@ -28,3 +28,9 @@ C:\Users\warre\Desktop\Code 2020\Sym\SymApp\obj\Debug\netcoreapp3.1\SymApp.cspro
 C:\Users\warre\Desktop\Code 2020\Sym\SymApp\obj\Debug\netcoreapp3.1\SymApp.dll
 C:\Users\warre\Desktop\Code 2020\Sym\SymApp\obj\Debug\netcoreapp3.1\SymApp.pdb
 C:\Users\warre\Desktop\Code 2020\Sym\SymApp\obj\Debug\netcoreapp3.1\SymApp.genruntimeconfig.cache
+C:\Users\warre\Desktop\Code 2020\SymBuilds\SymApp\netcoreapp3.1\SymApp.exe
+C:\Users\warre\Desktop\Code 2020\SymBuilds\SymApp\netcoreapp3.1\SymApp.deps.json
+C:\Users\warre\Desktop\Code 2020\SymBuilds\SymApp\netcoreapp3.1\SymApp.runtimeconfig.json
+C:\Users\warre\Desktop\Code 2020\SymBuilds\SymApp\netcoreapp3.1\SymApp.runtimeconfig.dev.json
+C:\Users\warre\Desktop\Code 2020\SymBuilds\SymApp\netcoreapp3.1\SymApp.dll
+C:\Users\warre\Desktop\Code 2020\SymBuilds\SymApp\netcoreapp3.1\SymApp.pdb

@@ -6,10 +6,10 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v3.1": {
-      "SymRegressionApp/1.0.0": {
+      "SymRegressionApp/0.1.0": {
         "dependencies": {
           "ILGPU": "0.8.0",
-          "SymAI": "1.0.0",
+          "SymAI": "0.1.0",
           "ILGPU.Reference": "0.8.0.0"
         },
         "runtime": {
@@ -33,16 +33,16 @@
       "System.Numerics.Vectors/4.5.0": {},
       "System.Reflection.Metadata/1.8.0": {},
       "System.Runtime.CompilerServices.Unsafe/4.5.2": {},
-      "Sym/1.0.0": {
+      "Sym/0.1.0": {
         "runtime": {
           "Sym.dll": {}
         }
       },
-      "SymAI/1.0.0": {
+      "SymAI/0.1.0": {
         "dependencies": {
           "ILGPU": "0.8.0",
           "ILGPU.Algorithms": "0.8.0",
-          "Sym": "1.0.0"
+          "Sym": "0.1.0"
         },
         "runtime": {
           "SymAI.dll": {}
@@ -59,7 +59,7 @@
     }
   },
   "libraries": {
-    "SymRegressionApp/1.0.0": {
+    "SymRegressionApp/0.1.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -106,12 +106,12 @@
       "path": "system.runtime.compilerservices.unsafe/4.5.2",
       "hashPath": "system.runtime.compilerservices.unsafe.4.5.2.nupkg.sha512"
     },
-    "Sym/1.0.0": {
+    "Sym/0.1.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "SymAI/1.0.0": {
+    "SymAI/0.1.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

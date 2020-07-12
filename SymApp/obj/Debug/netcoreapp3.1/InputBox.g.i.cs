@@ -69,7 +69,7 @@ namespace SymApp {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/SymApp;V1.0.0.0;component/inputbox.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/SymApp;V0.1.0.0;component/inputbox.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\InputBox.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

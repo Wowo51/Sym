@@ -2,7 +2,7 @@
   "version": 3,
   "targets": {
     ".NETCoreApp,Version=v3.1": {
-      "Sym/1.0.0": {
+      "Sym/0.1.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
         "compile": {
@@ -15,7 +15,7 @@
     }
   },
   "libraries": {
-    "Sym/1.0.0": {
+    "Sym/0.1.0": {
       "type": "project",
       "path": "../Sym/Sym.csproj",
       "msbuildProject": "../Sym/Sym.csproj"
@@ -23,14 +23,14 @@
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.1": [
-      "Sym >= 1.0.0"
+      "Sym >= 0.1.0"
     ]
   },
   "packageFolders": {
     "C:\\Users\\warre\\.nuget\\packages\\": {}
   },
   "project": {
-    "version": "1.0.0",
+    "version": "0.1.0",
     "restore": {
       "projectUniqueName": "C:\\Users\\warre\\Desktop\\Code 2020\\Sym\\SymApp\\SymApp.csproj",
       "projectName": "SymApp",

@@ -7,7 +7,7 @@
   "targets": {
     ".NETStandard,Version=v2.1": {},
     ".NETStandard,Version=v2.1/": {
-      "Sym/1.0.0": {
+      "Sym/0.1.0": {
         "runtime": {
           "Sym.dll": {}
         }
@@ -15,7 +15,7 @@
     }
   },
   "libraries": {
-    "Sym/1.0.0": {
+    "Sym/0.1.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

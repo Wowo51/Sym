@@ -6,4 +6,7 @@ C:\Users\warre\Desktop\Code 2020\Sym\Sym\obj\Debug\netstandard2.1\Sym.AssemblyIn
 C:\Users\warre\Desktop\Code 2020\Sym\Sym\obj\Debug\netstandard2.1\Sym.AssemblyInfo.cs
 C:\Users\warre\Desktop\Code 2020\Sym\Sym\obj\Debug\netstandard2.1\Sym.dll
 C:\Users\warre\Desktop\Code 2020\Sym\Sym\obj\Debug\netstandard2.1\Sym.pdb
+C:\Users\warre\Desktop\Code 2020\SymBuilds\Sym\netstandard2.1\Sym.deps.json
+C:\Users\warre\Desktop\Code 2020\SymBuilds\Sym\netstandard2.1\Sym.dll
+C:\Users\warre\Desktop\Code 2020\SymBuilds\Sym\netstandard2.1\Sym.pdb
 C:\Users\warre\Desktop\Code 2020\Sym\Sym\obj\Debug\netstandard2.1\Sym.csprojAssemblyReference.cache

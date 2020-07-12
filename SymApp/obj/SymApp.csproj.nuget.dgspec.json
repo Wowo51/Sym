@@ -5,7 +5,7 @@
   },
   "projects": {
     "C:\\Users\\warre\\Desktop\\Code 2020\\Sym\\SymApp\\SymApp.csproj": {
-      "version": "1.0.0",
+      "version": "0.1.0",
       "restore": {
         "projectUniqueName": "C:\\Users\\warre\\Desktop\\Code 2020\\Sym\\SymApp\\SymApp.csproj",
         "projectName": "SymApp",
@@ -64,7 +64,7 @@
       }
     },
     "C:\\Users\\warre\\Desktop\\Code 2020\\Sym\\Sym\\Sym.csproj": {
-      "version": "1.0.0",
+      "version": "0.1.0",
       "restore": {
         "projectUniqueName": "C:\\Users\\warre\\Desktop\\Code 2020\\Sym\\Sym\\Sym.csproj",
         "projectName": "Sym",

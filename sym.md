@@ -1,4 +1,4 @@
-## Sym, a free, open source, symbolic computation engine. By SymbolicComputation.com.
+## Sym, a free, open source, symbolic computation library.
 
 Sym is in alpha, watch here for updates.
 

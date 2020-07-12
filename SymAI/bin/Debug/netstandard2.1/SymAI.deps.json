@@ -7,11 +7,11 @@
   "targets": {
     ".NETStandard,Version=v2.1": {},
     ".NETStandard,Version=v2.1/": {
-      "SymAI/1.0.0": {
+      "SymAI/0.1.0": {
         "dependencies": {
           "ILGPU": "0.8.0",
           "ILGPU.Algorithms": "0.8.0",
-          "Sym": "1.0.0",
+          "Sym": "0.1.0",
           "ILGPU.Algorithms.Reference": "0.8.0.0",
           "ILGPU.Reference": "0.8.0.0"
         },
@@ -91,7 +91,7 @@
           }
         }
       },
-      "Sym/1.0.0": {
+      "Sym/0.1.0": {
         "runtime": {
           "Sym.dll": {}
         }
@@ -115,7 +115,7 @@
     }
   },
   "libraries": {
-    "SymAI/1.0.0": {
+    "SymAI/0.1.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -176,7 +176,7 @@
       "path": "system.runtime.compilerservices.unsafe/4.5.2",
       "hashPath": "system.runtime.compilerservices.unsafe.4.5.2.nupkg.sha512"
     },
-    "Sym/1.0.0": {
+    "Sym/0.1.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
