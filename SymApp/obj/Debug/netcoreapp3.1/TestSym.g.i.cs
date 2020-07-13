@@ -77,7 +77,7 @@ namespace SymApp {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/SymApp;V0.1.0.0;component/testsym.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/SymApp;component/testsym.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\TestSym.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

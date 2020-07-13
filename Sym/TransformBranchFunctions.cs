@@ -33,7 +33,7 @@ namespace Sym
                 Node transformedBranch = Transform.TransformNode(branch, transform, operators);
                 if (transformedBranch != null)
                 {
-                    Node newRoot = Node.ReplaceNode(rootClone, branch, transformedBranch);
+                    Node newRoot = Node.ReplaceBranch(branches, branchIndex, transformedBranch);
                     lOut.Add(newRoot);
                 }
             }
@@ -89,7 +89,7 @@ namespace Sym
             Node transformedBranch = Transform.TransformNode(branch, transform, operators);
             if (transformedBranch != null)
             {
-                Node newRoot = Node.ReplaceNode(rootClone, branch, transformedBranch);
+                Node newRoot = Node.ReplaceBranch(branches, branchIndex, transformedBranch);
                 return newRoot;
             }
             return null;

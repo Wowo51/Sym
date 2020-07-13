@@ -114,10 +114,10 @@ namespace SymAI.Regression
                 }
                 else if (nodes[currentNodeIndex].OperatorIndex >= 0)
                 {
+                    Index1 branchIndex1 = new Index1(nodeArrayStarts[individualIndex] + nodes[currentNodeIndex].Branch1);
+                    Index1 branchIndex2 = new Index1(nodeArrayStarts[individualIndex] + nodes[currentNodeIndex].Branch2);
                     if (nodes[currentNodeIndex].OperatorIndex < 6)
                     {
-                        Index1 branchIndex1 = new Index1(nodeArrayStarts[individualIndex] + nodes[currentNodeIndex].Branch1);
-                        Index1 branchIndex2 = new Index1(nodeArrayStarts[individualIndex] + nodes[currentNodeIndex].Branch2);
                         if (nodes[currentNodeIndex].OperatorIndex < 4)
                         {
                             if (nodes[currentNodeIndex].OperatorIndex == 2)
@@ -141,12 +141,27 @@ namespace SymAI.Regression
                             }
                         }
                     }
-                    else // > 6
+                    else // >= 6
                     {
-                        Index1 branchIndex1 = new Index1(nodeArrayStarts[individualIndex] + nodes[currentNodeIndex].Branch1);
                         if (nodes[currentNodeIndex].OperatorIndex == 6)
                         {
                             nodes[currentNodeIndex].Number = -nodes[branchIndex1].Number;
+                        }
+                        else if (nodes[currentNodeIndex].OperatorIndex == 8)
+                        {
+                            nodes[currentNodeIndex].Number = XMath.Sin(nodes[branchIndex1].Number);
+                        }
+                        else if (nodes[currentNodeIndex].OperatorIndex == 9)
+                        {
+                            nodes[currentNodeIndex].Number = XMath.Cos(nodes[branchIndex1].Number);
+                        }
+                        else if (nodes[currentNodeIndex].OperatorIndex == 14)
+                        {
+                            nodes[currentNodeIndex].Number = XMath.Pow(nodes[branchIndex1].Number, nodes[branchIndex2].Number);
+                        }
+                        else if (nodes[currentNodeIndex].OperatorIndex == 15)
+                        {
+                            nodes[currentNodeIndex].Number = XMath.Sign(nodes[branchIndex1].Number);
                         }
                     }
                     if (nodes[currentNodeIndex].Number == double.NaN)

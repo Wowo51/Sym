@@ -38,3 +38,5 @@ C:\Users\warre\Desktop\Code 2020\SymBuilds\SymRegressionApp\netcoreapp3.1\SymReg
 C:\Users\warre\Desktop\Code 2020\SymBuilds\SymRegressionApp\netcoreapp3.1\SymRegressionApp.runtimeconfig.dev.json
 C:\Users\warre\Desktop\Code 2020\SymBuilds\SymRegressionApp\netcoreapp3.1\SymRegressionApp.dll
 C:\Users\warre\Desktop\Code 2020\SymBuilds\SymRegressionApp\netcoreapp3.1\SymRegressionApp.pdb
+C:\Users\warre\Desktop\Code 2020\Sym\SymRegressionApp\bin\Debug\netcoreapp3.1\ILGPU.Algorithms.dll
+C:\Users\warre\Desktop\Code 2020\Sym\SymRegressionApp\bin\Debug\netcoreapp3.1\ILGPU.Algorithms.xml

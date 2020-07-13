@@ -55,6 +55,14 @@
             "fileVersion": "0.8.0.0"
           }
         }
+      },
+      "ILGPU.Algorithms.Reference/0.8.0.0": {
+        "runtime": {
+          "ILGPU.Algorithms.dll": {
+            "assemblyVersion": "0.8.0.0",
+            "fileVersion": "0.8.0.0"
+          }
+        }
       }
     }
   },
@@ -117,6 +125,11 @@
       "sha512": ""
     },
     "ILGPU.Reference/0.8.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "ILGPU.Algorithms.Reference/0.8.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""

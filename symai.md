@@ -20,7 +20,7 @@ The SymAI was debugged using data from Kaggle's "House Prices: Advanced Regressi
 
 Let's begin.
 
-Go to Kaggle and download and unzip the data file for "House Prices: Advanced Regression Techniques". Download and unzip the Sym repository. Load the Sym solution into Visual Studio and start the SymRegressionApp.
+Go to Kaggle and download and unzip the data file for "House Prices: Advanced Regression Techniques". Download and unzip the Sym repository. Load the Sym solution into Visual Studio, rebuild, then start the SymRegressionApp.
 
 In the SymRegressionApp go to Windows, Process Data. Click the Import button and load the train.csv file that you downloaded from Kaggle. Click Find Categories and Expand categories. At this point it might be helpful to explain what you've done. Many .csv tables contain strings as well as numeric data. The core SymAI library can only operate upon numeric data so all of the strings have to be converted in a meaningful way into numbers. Find Categories finds the columns that contain a small set of different strings, and converts the strings to integers. Expand categories creates multiple new columns from these columns. The data is also normalized so that all values are between 0 and 1. Click the Process Data and Save button to save the new processed file and call it processedTrain.csv. Click the Process Definition button to save a file stating how the data was processed, call it processDefinition.pd. You'll need this process definition later when forecasting. Close the ProcessDataWindow.
 

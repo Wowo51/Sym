@@ -114,7 +114,7 @@ namespace SymRegressionApp
             SymRegression = new SymRegression();
             SymRegression.FinishedGeneration += SymRegression_FinishedGeneration;
             SymRegression.FinishedRegressing += SymRegression_FinishedRegressing;
-            Task.Run(() => SymRegression.Run(NumericTable.Independents, NumericTable.Dependants, MaxNodesPerExpression, AcceleratorType, new List<string>(), SymRegression.ModelManager.GenerationTransforms()));
+            Task.Run(() => SymRegression.Run(NumericTable.Independents, NumericTable.Dependants, MaxNodesPerExpression, AcceleratorType, new List<string>(), SymRegression.ModelManager.GenerateTransforms()));
         }
 
         private void btnStop_Click(object sender, RoutedEventArgs e)

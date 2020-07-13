@@ -18,10 +18,10 @@ namespace SymAI.Regression
         public List<Operator> Operators = Operator.BuildOperators();
         public bool Regressing = false;
         public bool StopRegressing = false;
-        public int PopulationSize = 1000;
-        public int SurvivingPopulationSize = 50;
-        public int BreedPopulationSize = 250;
-        public int MutatePopulationSize = 250;
+        public int PopulationSize = 2000;
+        public int SurvivingPopulationSize = 250;
+        public int BreedPopulationSize = 1000;
+        public int MutatePopulationSize = 100;
         public int MaxNodesPerExpression = 15;
         public event Action FinishedGeneration;
         public event Action FinishedRegressing;
@@ -52,6 +52,7 @@ namespace SymAI.Regression
                 Models = Models.Where(x => x.Expression.DescendantsAndSelf().Count <= MaxNodesPerExpression)
                     .GroupBy(x => x.ExpressionString)
                     .Select(g => g.First())
+                    .Distinct()
                     .ToList();
 
                 for (int modelIndex = 0; modelIndex < Models.Count; modelIndex++)
@@ -221,7 +222,7 @@ namespace SymAI.Regression
                         replacementBranches.Add(transformedNode);
                     }
                 }
-                model.Expression = Node.ReplaceNodes(model.Expression, fBranches, replacementBranches);
+                model.Expression = Node.ReplaceBranches(model.Expression, fBranches, replacementBranches);
 
             }
             ResetConstants(model);
@@ -237,7 +238,7 @@ namespace SymAI.Regression
             {
                 constants.Add(Node.Parse("Constant[" + constantIndex.ToString().Trim() + "]", Operators));
             }
-            Node result = Node.ReplaceNodes(model.Expression, constantBranches, constants);
+            Node result = Node.ReplaceBranches(model.Expression, constantBranches, constants);
             model.Expression = result;
             model.ExpressionString = Node.Join(model.Expression);
             //model.TotalConstants = constants.Count;
@@ -269,21 +270,6 @@ namespace SymAI.Regression
             return Models.AsParallel().Any(x => x.ExpressionString == model.ExpressionString);
         }
 
-        public List<Transform> GenerationTransforms()
-        {
-            List<string> lOut = new List<string>();
-            lOut.Add("x~f+f");
-            lOut.Add("x~f-f");
-            lOut.Add("x~f*f");
-            lOut.Add("x~f/f");
-            //lOut.Add("x~Sin(f)");
-            //lOut.Add("x~Cos(f)");
-            //lOut.Add("x~Tan(f)");
-            //lOut.Add("x~Pow(f,f)");
-            lOut.Add("x~f");
-            return lOut.Select(x => Transform.StringToTransform(x, Operators)).ToList();
-        }
-
         public void Breed()
         {
             ConcurrentBag<Model> children = new ConcurrentBag<Model>();
@@ -308,6 +294,7 @@ namespace SymAI.Regression
                         int childIndex = branchToReplace.Parent.Children.IndexOf(branchToReplace);
                         branchToReplace.Parent.Children.RemoveAt(childIndex);
                         branchToReplace.Parent.Children.Insert(childIndex, branchToMove);
+                        branchToMove.Parent = branchToReplace.Parent;
                         child.Expression = parent2Expression;
                         child.ExpressionString = Node.Join(child.Expression);
                         ResetConstants(child);
@@ -333,6 +320,23 @@ namespace SymAI.Regression
                 }
             });
             Models.AddRange(mutants.ToList());
+        }
+
+        public List<Transform> GenerateTransforms()
+        {
+            List<string> lOut = new List<string>();
+            lOut.Add("x~f+f");
+            lOut.Add("x~f-f");
+            lOut.Add("x~f*f");
+            lOut.Add("x~f/f");
+            //lOut.Add("x~Sin(f)");
+            //lOut.Add("x~Cos(f)");
+            //lOut.Add("x~Tan(f)");
+            //lOut.Add("x~Pow(f,f)");
+            //lOut.Add("x~Sign(f)");
+            //lOut.Add("x~Abs(f)");
+            lOut.Add("x~f");
+            return lOut.Select(x => Transform.StringToTransform(x, Operators)).ToList();
         }
     }
 }

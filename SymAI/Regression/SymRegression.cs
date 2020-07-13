@@ -27,9 +27,9 @@ namespace SymAI.Regression
         public int IndividualsTestedCount = 0;
         public bool IsRunning = false;
         public bool AdjustForLength = true;
-        public double AdjustForLengthFactor = 4;
-        public bool CheckCalculations = false;
-        public double[,] Independents;
+        public double PenalizeLengthFactor = .001d;
+        public bool UseSymCalculate = false;
+        public double[][] Independents;
         public double[] Dependants;
 
         public SymRegression()
@@ -47,17 +47,43 @@ namespace SymAI.Regression
                 return;
             }
             IsRunning = true;
-            if (CheckCalculations)
+            if (UseSymCalculate)
             {
-                Independents = independents;
+                Independents = ToJagged(independents);
                 Dependants = dependants;
             }
+            else
+            {
+                GPUsManager.Initialize(acceleratorType, independents, dependants);
+            }
             MaxNodesPerExpression = maxNodesPerExpression;
-            GPUsManager.Initialize(acceleratorType, independents, dependants);
             ModelManager.MaxNodesPerExpression = maxNodesPerExpression;
             ModelManager.CorrelationItems = Correlation.ComputeRankedCorrelationItems(independents, dependants);
             ModelManager.Run(independents.GetUpperBound(1) + 1, startModels, transforms);
             IsRunning = false;
+        }
+
+        public double[][] ToJagged(double[,] independents)
+        {
+            int totalRows = independents.GetUpperBound(0) + 1;
+            int totalColumns = independents.GetUpperBound(1) + 1;
+            double[][] jagged = new double[totalRows][];
+            Parallel.For(0, totalRows, rowIndex =>
+            {
+                jagged[rowIndex] = GetRow(independents, rowIndex);
+            });
+            return jagged;
+        }
+
+        public static double[] GetRow(double[,] table, int rowIndex)
+        {
+            int totalColumns = table.GetUpperBound(1) + 1;
+            List<double> outRow = new List<double>();
+            for (int columnIndex = 0; columnIndex < totalColumns; columnIndex++)
+            {
+                outRow.Add(table[rowIndex, columnIndex]);
+            }
+            return outRow.ToArray();
         }
 
         private void ModelManager_PostIndividual(Individual individual)
@@ -71,29 +97,28 @@ namespace SymAI.Regression
             {
                 return;
             }
-            int[] nodeArrayStarts;
-            NodeGPU[] nodeGrid = NodesToNodesGPU(Individuals, out nodeArrayStarts);
-            
-            double[] results = GPUsManager.Run(nodeGrid, nodeArrayStarts);
 
-            double[] symResults = null;
-            if (CheckCalculations)
+            if (UseSymCalculate)
             {
-                symResults = SymCalculate.CalculateErrors(Independents, Dependants, Individuals);
-                double error = symResults.Zip(results, (r, s) => Math.Pow(r - s, 2)).Sum();
-                if (error != 0)
-                {
-                    double a = 0;
-                }
+                double[] symResults = SymCalculate.CalculateErrors(Independents, Dependants, Individuals);
+                UpdateIndividuals(symResults, Individuals, AdjustForLength, PenalizeLengthFactor);
+            }
+            else
+            {
+                int[] nodeArrayStarts;
+                NodeGPU[] nodeGrid = NodesToNodesGPU(Individuals, out nodeArrayStarts);
+                double[] results = GPUsManager.Run(nodeGrid, nodeArrayStarts);
+                UpdateIndividuals(results, Individuals, AdjustForLength, PenalizeLengthFactor);
             }
 
-            UpdateIndividuals(results, Individuals, AdjustForLength, AdjustForLengthFactor);
             List<Individual> bestIndividuals = GetBestIndividualForEachModelAndUpdateOptimizer(Individuals);
             PushBestResultsBackToModels(bestIndividuals);
             List<Model> models = Individuals.Select(x => x.Model).Distinct().ToList();
             IndividualsTestedCount += Individuals.Count;
             Individuals = new List<Individual>();
         }
+
+
 
         public static NodeGPU[] NodesToNodesGPU(List<Individual> individuals, out int[] nodeArrayStarts)
         {
@@ -162,7 +187,7 @@ namespace SymAI.Regression
             return outNodes;
         }
 
-        public static void UpdateIndividuals(double[] results, List<Individual> individuals, bool adjustForLength, double adjustForLengthFactor)
+        public static void UpdateIndividuals(double[] results, List<Individual> individuals, bool adjustForLength, double penalizeLengthFactor)
         {
             for (int individualIndex = 0; individualIndex < individuals.Count; individualIndex++)
             {
@@ -179,14 +204,15 @@ namespace SymAI.Regression
                 if (adjustForLength)
                 {
                     double totalLength = (double)individual.Model.Expression.DescendantsAndSelf().Count;
-                    if (individual.Model.Fitness > 0)
-                    {
-                        adjustedFitness = Math.Pow(individual.Fitness, adjustForLengthFactor) / totalLength;
-                    }
-                    else
-                    {
-                        adjustedFitness = -Math.Pow(Math.Abs(individual.Fitness), adjustForLengthFactor) * totalLength;
-                    }
+                    adjustedFitness = individual.Fitness - totalLength * penalizeLengthFactor;
+                    //if (individual.Model.Fitness > 0)
+                    //{
+                    //    adjustedFitness = individual.Fitness - totalLength / adjustForLengthFactor;
+                    //}
+                    //else
+                    //{
+                    //    adjustedFitness = -Math.Pow(Math.Abs(individual.Fitness), adjustForLengthFactor) * totalLength;
+                    //}
                 }
                 individual.LengthAdjustedFitness = adjustedFitness;
             }
@@ -224,7 +250,10 @@ namespace SymAI.Regression
 
         private void ModelManager_FinishedRegressing()
         {
-            GPUsManager.Dispose();
+            if (UseSymCalculate == false)
+            {
+                GPUsManager.Dispose();
+            }
             FinishedRegressing();
         }
 

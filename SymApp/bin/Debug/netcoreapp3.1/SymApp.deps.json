@@ -6,15 +6,15 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v3.1": {
-      "SymApp/1.0.0": {
+      "SymApp/0.1.0": {
         "dependencies": {
-          "Sym": "1.0.0"
+          "Sym": "0.1.0"
         },
         "runtime": {
           "SymApp.dll": {}
         }
       },
-      "Sym/1.0.0": {
+      "Sym/0.1.0": {
         "runtime": {
           "Sym.dll": {}
         }
@@ -22,12 +22,12 @@
     }
   },
   "libraries": {
-    "SymApp/1.0.0": {
+    "SymApp/0.1.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Sym/1.0.0": {
+    "Sym/0.1.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

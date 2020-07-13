@@ -128,6 +128,10 @@ namespace Sym
 
         public static double SignFunction(List<double> inNumbers)
         {
+            if (double.IsNaN(inNumbers[0]))
+            {
+                return double.NaN;
+            }
             return Math.Sign(inNumbers[0]);
         }
 

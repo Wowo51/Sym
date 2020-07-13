@@ -368,46 +368,73 @@ namespace Sym.Nodes
             list.Add(inNode);
         }
 
-        public static Node ReplaceNodes(Node root, List<Node> replaceMes, List<Node> replacements)
+        public static Node ReplaceBranches(Node root, List<Node> replaceMes, List<Node> replacements)
         {
             for (int i = 0; i < replaceMes.Count; i++)
             {
-                root = ReplaceNode(root, replaceMes[i], replacements[i]);
+                root = ReplaceBranch(root, replaceMes[i], replacements[i]);
             }
             return root;
         }
 
-        //public static Node ReplaceNode(Node root, Node replaceMe, Node replacement)
+        public static Node ReplaceBranch(Node replaceMyBranch, Node replaceMe, Node newBranch)
+        {
+            List<Node> branches = replaceMyBranch.DescendantsAndSelf();
+            int branchIndex = branches.IndexOf(replaceMe);
+            return ReplaceBranch(branches, branchIndex, newBranch);
+        }
+
+
+        public static Node ReplaceBranch(List<Node> replaceMyBranch, int branchIndex, Node newBranch)
+        {
+            Node replaceMe = replaceMyBranch[branchIndex];
+            if (replaceMe.Parent != null)
+            {
+                int replaceIndex = replaceMe.Parent.Children.IndexOf(replaceMe);
+                replaceMe.Parent.Children.RemoveAt(replaceIndex);
+                replaceMe.Parent.Children.Add(newBranch);
+                newBranch.Parent = replaceMe.Parent;
+                return replaceMyBranch.Last();
+            }
+            else
+            {
+                return newBranch;
+            }
+        }
+
+        //public static Node ReplaceNodes(Node root, List<Node> replaceMes, List<Node> replacements)
         //{
-        //    List<Node> branches = root.DescendantsAndSelf();
-        //    int branchIndex = branches.IndexOf(replaceMe);
-        //    Node branch = branches[branchIndex];
-        //    if (branch.)
+        //    for (int i = 0; i < replaceMes.Count; i++)
+        //    {
+        //        root = ReplaceNode(root, replaceMes[i], replacements[i]);
+        //    }
+        //    return root;
         //}
 
-        public static Node ReplaceNode(Node root, Node replaceMe, Node replacement)
-        {
-            bool didReplacement = false;
-            return ReplaceNodeNest(root, replaceMe, replacement, ref didReplacement);
-        }
 
-        public static Node ReplaceNodeNest(Node node, Node replaceMe, Node replacement, ref bool didReplacement)
-        {
-            if (node == replaceMe)
-            {
-                didReplacement = true;
-                return replacement;
-            }
-            List<Node> newChildren = new List<Node>();
-            foreach (Node child in node.Children)
-            {
-                Node newChild = ReplaceNodeNest(child, replaceMe, replacement, ref didReplacement);
-                newChild.Parent = node;
-                newChildren.Add(newChild);
-            }
-            node.Children = newChildren;
-            return node;
-        }
+        //public static Node ReplaceNode(Node root, Node replaceMe, Node replacement)
+        //{
+        //    bool didReplacement = false;
+        //    return ReplaceNodeNest(root, replaceMe, replacement, ref didReplacement);
+        //}
+
+        //public static Node ReplaceNodeNest(Node node, Node replaceMe, Node replacement, ref bool didReplacement)
+        //{
+        //    if (node == replaceMe)
+        //    {
+        //        didReplacement = true;
+        //        return replacement;
+        //    }
+        //    List<Node> newChildren = new List<Node>();
+        //    foreach (Node child in node.Children)
+        //    {
+        //        Node newChild = ReplaceNodeNest(child, replaceMe, replacement, ref didReplacement);
+        //        newChild.Parent = node;
+        //        newChildren.Add(newChild);
+        //    }
+        //    node.Children = newChildren;
+        //    return node;
+        //}
 
         public static Node RemoveDoubleNegatives(Node inNode)
         {
@@ -480,6 +507,15 @@ namespace Sym.Nodes
         }
 
         public static void SetNumbers(List<Pointer> pointers, List<double> numbers, List<Node> branches)
+        {
+            foreach (Pointer replacementPointer in pointers)
+            {
+                VariableNode branch = (VariableNode)branches[replacementPointer.DestinationIndex];
+                branch.Number = numbers[replacementPointer.SourceIndex];
+            }
+        }
+
+        public static void SetNumbers(List<Pointer> pointers, double[] numbers, List<Node> branches)
         {
             foreach (Pointer replacementPointer in pointers)
             {

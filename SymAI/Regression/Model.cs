@@ -48,26 +48,26 @@ namespace SymAI.Regression
 
         public double[] GetInitialConstants()
         {
-            //double[] constants = Expression.DescendantsAndSelf().Where(x => x is VariableNode)
-            //    .Where(x => ((VariableNode)x).Variable.Substring(0, 8) == "Constant")
-            //    .Select(x => ((VariableNode)x).Number).ToArray();
-            //for (int i = 0; i < constants.Length; i++)
-            //{
-            //    if (double.IsNaN(constants[i]))
-            //    {
-            //        constants[i] = RandomHelpers.Exponential();
-            //    }
-            //}
-            //return constants;
-
-            int totalConstants = Expression.DescendantsAndSelf().Where(x => x is VariableNode)
-                .Where(x => ((VariableNode)x).Variable.Substring(0, 8) == "Constant").ToList().Count;
-            double[] constants = new double[totalConstants];
+            double[] constants = Expression.DescendantsAndSelf().Where(x => x is VariableNode)
+                .Where(x => ((VariableNode)x).Variable.Substring(0, 8) == "Constant")
+                .Select(x => ((VariableNode)x).Number).ToArray();
             for (int i = 0; i < constants.Length; i++)
             {
-                constants[i] = RandomHelpers.Exponential(1);
+                if (double.IsNaN(constants[i]))
+                {
+                    constants[i] = RandomHelpers.Exponential(1);
+                }
             }
             return constants;
+
+            //int totalConstants = Expression.DescendantsAndSelf().Where(x => x is VariableNode)
+            //    .Where(x => ((VariableNode)x).Variable.Substring(0, 8) == "Constant").ToList().Count;
+            //double[] constants = new double[totalConstants];
+            //for (int i = 0; i < constants.Length; i++)
+            //{
+            //    constants[i] = RandomHelpers.Exponential(1);
+            //}
+            //return constants;
         }
 
         public Model Clone()

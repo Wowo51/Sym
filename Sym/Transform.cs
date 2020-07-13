@@ -132,7 +132,7 @@ namespace Sym
             GetReplacementPairs(transform.Left, transformMe, replacementPairs, ref foundMisMatch, operators);
             if (foundMisMatch == false)
             {
-                return ReplaceFunctions(transform.Right, replacementPairs, operators);
+                return ReplaceFunctions(transform.Right.Clone(), replacementPairs, operators);
             }
             return null;
         }
@@ -198,10 +198,10 @@ namespace Sym
 
         public static Node ReplaceFunctions(Node inTree, List<ReplacementPair> replacementPairs, List<Operator> operators)
         {
-            Node tree = inTree.Clone();
-            if (tree is VariableNode)
+            //Node tree = inTree.Clone();
+            if (inTree is VariableNode)
             {
-                VariableNode node = (VariableNode)tree;
+                VariableNode node = (VariableNode)inTree;
                 for (int replacementPairIndex = 0; replacementPairIndex < replacementPairs.Count; replacementPairIndex++)
                 {
                     if (node.Variable == replacementPairs[replacementPairIndex].ReplaceMe)
@@ -211,14 +211,14 @@ namespace Sym
                 }
             }
             List<Node> newChildren = new List<Node>();
-            foreach (Node child in tree.Children)
+            foreach (Node child in inTree.Children)
             {
                 Node newChild = ReplaceFunctions(child, replacementPairs, operators);
-                newChild.Parent = tree;
+                newChild.Parent = inTree;
                 newChildren.Add(newChild);
             }
-            tree.Children = newChildren;
-            return tree;
+            inTree.Children = newChildren;
+            return inTree;
         }
 
         public static Transform StringToTransform(string inTransform, List<Operator> operators)
