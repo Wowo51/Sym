@@ -27,7 +27,7 @@ namespace SymAI.Regression
         public int IndividualsTestedCount = 0;
         public bool IsRunning = false;
         public bool AdjustForLength = true;
-        public double PenalizeLengthFactor = .001d;
+        public double PenalizeLengthFactor = .0005d;
         public bool UseSymCalculate = false;
         public double[][] Independents;
         public double[] Dependants;
@@ -40,7 +40,7 @@ namespace SymAI.Regression
             ModelManager.Calculate += ModelManager_Calculate;
         }
 
-        public void Run(double[,] independents, double[] dependants, int maxNodesPerExpression, AcceleratorType acceleratorType, List<string> startModels, List<Transform> transforms)
+        public void Run(double[,] independents, double[] dependants, int maxNodesPerExpression, AcceleratorType acceleratorType, List<Node> startExpressions, List<Transform> transforms)
         {
             if (IsRunning)
             {
@@ -59,7 +59,7 @@ namespace SymAI.Regression
             MaxNodesPerExpression = maxNodesPerExpression;
             ModelManager.MaxNodesPerExpression = maxNodesPerExpression;
             ModelManager.CorrelationItems = Correlation.ComputeRankedCorrelationItems(independents, dependants);
-            ModelManager.Run(independents.GetUpperBound(1) + 1, startModels, transforms);
+            ModelManager.Run(independents.GetUpperBound(1) + 1, startExpressions, transforms);
             IsRunning = false;
         }
 
@@ -149,6 +149,8 @@ namespace SymAI.Regression
                 byte isRoot = 0;
                 int branch1 = -1;
                 int branch2 = -1;
+                int branch3 = -1;
+                int branch4 = -1;
                 if (branchIndex == branches.Count - 1)
                 {
                     isRoot = 1;
@@ -163,9 +165,17 @@ namespace SymAI.Regression
                     OperatorNode operatorNode = (OperatorNode)node;
                     operatorIndex = operatorNode.Operator.OperatorIndex;
                     branch1 = branches.IndexOf(node.Children[0]);
-                    if (node.Children.Count == 2)
+                    if (node.Children.Count >= 2)
                     {
                         branch2 = branches.IndexOf(node.Children[1]);
+                    }
+                    if (node.Children.Count >= 3)
+                    {
+                        branch3 = branches.IndexOf(node.Children[2]);
+                    }
+                    if (node.Children.Count >= 4)
+                    {
+                        branch4 = branches.IndexOf(node.Children[3]);
                     }
                 }
                 if (node is VariableNode)
@@ -182,7 +192,7 @@ namespace SymAI.Regression
                         number = individual.Constants[constantIndex];
                     }
                 }
-                outNodes[branchIndex] = new NodeGPU(number, operatorIndex, isRoot, branch1, branch2, independentIndex);
+                outNodes[branchIndex] = new NodeGPU(number, operatorIndex, isRoot, branch1, branch2, branch3, branch4, independentIndex);
             }
             return outNodes;
         }
@@ -260,6 +270,42 @@ namespace SymAI.Regression
         private void ModelManager_FinishedGeneration()
         {
             FinishedGeneration();
+        }
+
+        public List<Node> ToStartExpressions(string inString)
+        {
+            List<string> startExpressionStrings = inString.Split(Environment.NewLine).ToList();
+            List<Node> startExpressions = new List<Node>();
+            List<Operator> operators = Operator.BuildOperators();
+            foreach (string startExpressionString in startExpressionStrings)
+            {
+                if (startExpressionString.Substring(0, "Total Individuals Tested".Length) == "Total Individuals Tested")
+                {
+                    continue;
+                }
+                if (startExpressionString == "LengthAdjustedFitness,Fitness,Model")
+                {
+                    continue;
+                }
+                string[] cells = startExpressionString.Split(",");
+                string expressionString = cells.Last();
+                Node expression = null;
+                try
+                {
+                    expression = Node.Parse(expressionString, operators);
+                }
+                catch
+                {
+                    //this is horrific
+                }
+                List<Node> numericBranches = expression.DescendantsAndSelf().Where(x => x is NumericNode).ToList();
+                List<Node> replacements = numericBranches.Select(x => Node.Parse("Constant", operators)).ToList();
+                numericBranches.Zip(replacements, (x, y) => ((VariableNode)y).Number = ((NumericNode)x).Number);
+                expression = Node.ReplaceBranches(expression, numericBranches, replacements);
+                expression = ModelManager.ResetConstants(expression);
+                startExpressions.Add(expression);
+            }
+            return startExpressions;
         }
     }
 }

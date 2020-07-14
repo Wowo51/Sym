@@ -18,10 +18,10 @@ namespace SymAI.Regression
         public List<Operator> Operators = Operator.BuildOperators();
         public bool Regressing = false;
         public bool StopRegressing = false;
-        public int PopulationSize = 2000;
-        public int SurvivingPopulationSize = 250;
-        public int BreedPopulationSize = 1000;
-        public int MutatePopulationSize = 100;
+        public int PopulationSize = 1000;
+        public int SurvivingPopulationSize = 100;
+        public int BreedPopulationSize = 250;
+        public int MutatePopulationSize = 250;
         public int MaxNodesPerExpression = 15;
         public event Action FinishedGeneration;
         public event Action FinishedRegressing;
@@ -31,15 +31,15 @@ namespace SymAI.Regression
         public List<Node> Independents;
         Random Random = new Random();
 
-        public void Run(int totalIndependents, List<string> startModels, List<Transform> transforms)
+        public void Run(int totalIndependents, List<Node> startExpressions, List<Transform> transforms)
         {
             Regressing = true;
             StopRegressing = false;
             Transforms = transforms;
             Independents = BuildIndependents(totalIndependents);
-            if (startModels != null && startModels.Count > 0)
+            if (startExpressions != null && startExpressions.Count > 0)
             {
-                Models = StartExpressionsToModels(startModels, Operators);
+                Models = StartExpressionsToModels(startExpressions);
             }
             else
             {
@@ -173,16 +173,14 @@ namespace SymAI.Regression
             return TransformBranchFunctions.TransformBranchWithTransform(root, transform, operators, branchIndex);
         }
 
-        public List<Model> StartExpressionsToModels(List<string> startModels, List<Operator> operators)
+        public List<Model> StartExpressionsToModels(List<Node> startExpressions)
         {
             List<Model> newModels = new List<Model>();
-            foreach (string expression in startModels)
+            foreach (Node expression in startExpressions)
             {
                 Model model = new Model();
-                model.ExpressionString = expression;
-                model.Expression = Node.Parse(expression, operators);
-                //model.TotalConstants = Regex.Matches(expression, "Constant").Count;
-                //model.BuildConstantPointers();
+                model.Expression = expression;
+                model.ExpressionString = Node.Join(expression);
                 newModels.Add(model);
             }
             return newModels;
@@ -225,24 +223,21 @@ namespace SymAI.Regression
                 model.Expression = Node.ReplaceBranches(model.Expression, fBranches, replacementBranches);
 
             }
-            ResetConstants(model);
-            
+            model.Expression = ResetConstants(model.Expression);
+            model.ExpressionString = Node.Join(model.Expression);
         }
 
-        public void ResetConstants(Model model)
+        public Node ResetConstants(Node expression)
         {
-            List<Node> constantBranches = GetConstantBranches(model.Expression);
-            int totalConstantsRequired = constantBranches.Count;
-            List<Node> constants = new List<Node>();
+            List<Node> oldConstantBranches = GetConstantBranches(expression);
+            int totalConstantsRequired = oldConstantBranches.Count;
+            List<Node> newConstantBranches = new List<Node>();
             for (int constantIndex = 0; constantIndex < totalConstantsRequired; constantIndex++)
             {
-                constants.Add(Node.Parse("Constant[" + constantIndex.ToString().Trim() + "]", Operators));
+                newConstantBranches.Add(Node.Parse("Constant[" + constantIndex.ToString().Trim() + "]", Operators));
+                ((VariableNode)newConstantBranches[constantIndex]).Number = ((VariableNode)oldConstantBranches[constantIndex]).Number;
             }
-            Node result = Node.ReplaceBranches(model.Expression, constantBranches, constants);
-            model.Expression = result;
-            model.ExpressionString = Node.Join(model.Expression);
-            //model.TotalConstants = constants.Count;
-            //model.BuildConstantPointers();
+            return Node.ReplaceBranches(expression, oldConstantBranches, newConstantBranches);
         }
 
         public List<Node> GetConstantBranches(Node expression)
@@ -296,9 +291,8 @@ namespace SymAI.Regression
                         branchToReplace.Parent.Children.Insert(childIndex, branchToMove);
                         branchToMove.Parent = branchToReplace.Parent;
                         child.Expression = parent2Expression;
+                        child.Expression = ResetConstants(child.Expression);
                         child.ExpressionString = Node.Join(child.Expression);
-                        ResetConstants(child);
-                        //child.TotalConstants = Regex.Matches(child.ExpressionString, "Constant").Count;
                         children.Add(child);
                     }
                 }
@@ -335,6 +329,15 @@ namespace SymAI.Regression
             //lOut.Add("x~Pow(f,f)");
             //lOut.Add("x~Sign(f)");
             //lOut.Add("x~Abs(f)");
+
+            //lOut.Add("x~IfEquals(f,f,f,f)");
+            //lOut.Add("x~IfLess(f,f,f,f)");
+            //lOut.Add("x~IfLessOrEquals(f,f,f,f)");
+            //lOut.Add("x~IfOne(f,f,f)");
+            //lOut.Add("x~IfZero(f,f,f)");
+
+            //lOut.Add("x~f*f+f*f");
+
             lOut.Add("x~f");
             return lOut.Select(x => Transform.StringToTransform(x, Operators)).ToList();
         }

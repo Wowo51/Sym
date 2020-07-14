@@ -31,9 +31,10 @@ namespace SymRegressionApp
     {
         public NumericTable NumericTable;
         public SymRegression SymRegression;
-        public int MaxNodesPerExpression = 15;
+        public int MaxNodesPerExpression = 10;
         public AcceleratorType AcceleratorType = AcceleratorType.OpenCL;
         public DateTime LastTimeOfTextRefresh = DateTime.Now;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -53,7 +54,7 @@ namespace SymRegressionApp
                 List<string> rows = new List<string>();
                 rows.Add("Total Individuals Tested=" + SymRegression.IndividualsTestedCount.ToString());
                 rows.Add("LengthAdjustedFitness,Fitness,Model");
-                int modelCount = SymRegression.ModelManager.SurvivingPopulationSize;
+                int modelCount = Math.Min(SymRegression.ModelManager.SurvivingPopulationSize, SymRegression.ModelManager.Models.Count);
                 for(int modelIndex = 0; modelIndex < modelCount; modelIndex++)
                 {
                     Model model = SymRegression.ModelManager.Models[modelIndex];
@@ -114,7 +115,12 @@ namespace SymRegressionApp
             SymRegression = new SymRegression();
             SymRegression.FinishedGeneration += SymRegression_FinishedGeneration;
             SymRegression.FinishedRegressing += SymRegression_FinishedRegressing;
-            Task.Run(() => SymRegression.Run(NumericTable.Independents, NumericTable.Dependants, MaxNodesPerExpression, AcceleratorType, new List<string>(), SymRegression.ModelManager.GenerateTransforms()));
+
+            //this isn't ready yet...
+            //List<Node> startExpressions = SymRegression.ToStartExpressions(txtMain.Text);
+
+            List<Node> startExpressions = new List<Node>();
+            Task.Run(() => SymRegression.Run(NumericTable.Independents, NumericTable.Dependants, MaxNodesPerExpression, AcceleratorType, startExpressions, SymRegression.ModelManager.GenerateTransforms()));
         }
 
         private void btnStop_Click(object sender, RoutedEventArgs e)
@@ -141,6 +147,11 @@ namespace SymRegressionApp
             ForecastingWindow forecastingWindow = new ForecastingWindow();
             forecastingWindow.ParentMainWindow = this;
             forecastingWindow.Show();
+        }
+
+        private void btnClear_Click(object sender, RoutedEventArgs e)
+        {
+            txtMain.Text = "";
         }
     }
 }

@@ -211,6 +211,7 @@ namespace Sym.Nodes
                 foreach (string operand in operands)
                 {
                     Node childNode = Parse(operand, operators);
+                    childNode.Parent = newNode;
                     newNode.Children.Add(childNode);
                 }
                 return newNode;

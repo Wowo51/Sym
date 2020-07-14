@@ -26,6 +26,7 @@
             <Button Name="btnStart" Click="btnStart_Click" Margin="5">Start</Button>
             <Button Name="btnStop"  Click="btnStop_Click" Margin="5">Stop</Button>
             <Button Name="btnCopy" Click="btnCopy_Click" Margin="5">Copy</Button>
+            <Button Name="btnClear" Click="btnClear_Click" Margin="5">Clear</Button>
             </StackPanel>
         <TextBox Name="txtMain" AcceptsReturn="True" Grid.Row="2" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible"/>
     </Grid>

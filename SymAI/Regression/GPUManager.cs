@@ -141,7 +141,7 @@ namespace SymAI.Regression
                             }
                         }
                     }
-                    else // >= 6
+                    else if (nodes[currentNodeIndex].OperatorIndex >= 6 && nodes[currentNodeIndex].OperatorIndex <= 15)
                     {
                         if (nodes[currentNodeIndex].OperatorIndex == 6)
                         {
@@ -163,6 +163,67 @@ namespace SymAI.Regression
                         {
                             nodes[currentNodeIndex].Number = XMath.Sign(nodes[branchIndex1].Number);
                         }
+                    }
+                    else
+                    {
+                        Index1 branchIndex3 = new Index1(nodeArrayStarts[individualIndex] + nodes[currentNodeIndex].Branch3);
+                        Index1 branchIndex4 = new Index1(nodeArrayStarts[individualIndex] + nodes[currentNodeIndex].Branch4);
+                        if (nodes[currentNodeIndex].OperatorIndex == 18)
+                        {
+                            if (nodes[branchIndex1].Number == nodes[branchIndex2].Number)
+                            {
+                                nodes[currentNodeIndex].Number = nodes[branchIndex3].Number;
+                            }
+                            else
+                            {
+                                nodes[currentNodeIndex].Number = nodes[branchIndex4].Number;
+                            }
+                        }
+                        else if (nodes[currentNodeIndex].OperatorIndex == 19)
+                        {
+                            if (nodes[branchIndex1].Number < nodes[branchIndex2].Number)
+                            {
+                                nodes[currentNodeIndex].Number = nodes[branchIndex3].Number;
+                            }
+                            else
+                            {
+                                nodes[currentNodeIndex].Number = nodes[branchIndex4].Number;
+                            }
+                        }
+                        else if (nodes[currentNodeIndex].OperatorIndex == 20)
+                        {
+                            if (nodes[branchIndex1].Number <= nodes[branchIndex2].Number)
+                            {
+                                nodes[currentNodeIndex].Number = nodes[branchIndex3].Number;
+                            }
+                            else
+                            {
+                                nodes[currentNodeIndex].Number = nodes[branchIndex4].Number;
+                            }
+                        }
+                        else if (nodes[currentNodeIndex].OperatorIndex == 21)
+                        {
+                            if (nodes[branchIndex1].Number == 0)
+                            {
+                                nodes[currentNodeIndex].Number = nodes[branchIndex2].Number;
+                            }
+                            else
+                            {
+                                nodes[currentNodeIndex].Number = nodes[branchIndex3].Number;
+                            }
+                        }
+                        else if (nodes[currentNodeIndex].OperatorIndex == 22)
+                        {
+                            if (nodes[branchIndex1].Number == 1)
+                            {
+                                nodes[currentNodeIndex].Number = nodes[branchIndex2].Number;
+                            }
+                            else
+                            {
+                                nodes[currentNodeIndex].Number = nodes[branchIndex3].Number;
+                            }
+                        }
+
                     }
                     if (nodes[currentNodeIndex].Number == double.NaN)
                     {

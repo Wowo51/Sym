@@ -52,7 +52,7 @@ namespace SymAI.Optimization
 
         public bool IsOptimized()
         {
-            if (StrikeCount >= 2)
+            if (StrikeCount > 2)
             {
                 return true;
             }

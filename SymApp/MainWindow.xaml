@@ -54,7 +54,7 @@
                 <Button Name="btnDerivative" Click="btnDerivative_Click">Derivative</Button>
                 <Button Name="btnPartialDerivative" Click="btnPartialDerivative_Click">PartialDerivative</Button>
                 <Button Name="btnTransformBranches" Click="btnTransformBranches_Click">TransformBranches</Button>
-                <Button Name="btnSolveSystem" Click="btnSolveSystem_Click">SolveSystem</Button>
+                <Button Name="btnSolveSystem" Click="btnSolveSystem_Click" Visibility="Collapsed">SolveSystem</Button>
                 <Button Name="btnStopSolving" Click="btnStopSolving_Click">StopSolving</Button>
             </ToolBar>
         </ToolBarTray>

@@ -35,6 +35,12 @@ namespace Sym
             operators.Add(new Operator("Abs", 16, OperatorType.Enclosing, AbsFunction));
             operators.Add(new Operator("Sqrt", 17, OperatorType.Enclosing, SqrtFunction));
 
+            operators.Add(new Operator("IfEquals", 18, OperatorType.Enclosing, IfEqualsFunction));
+            operators.Add(new Operator("IfLess", 19, OperatorType.Enclosing, IfLessFunction));
+            operators.Add(new Operator("IfLessOrEquals", 20, OperatorType.Enclosing, IfLessOrEqualsFunction));
+            operators.Add(new Operator("IfZero", 21, OperatorType.Enclosing, IfZeroFunction));
+            operators.Add(new Operator("IfOne", 22, OperatorType.Enclosing, IfOneFunction));
+
             return operators;
         }
 
@@ -148,6 +154,66 @@ namespace Sym
         public static double ParenthesesFunction(List<double> inNumbers)
         {
             return inNumbers[0];
+        }
+
+        public static double IfEqualsFunction(List<double> inNumbers)
+        {
+            if (inNumbers[0] == inNumbers[1])
+            {
+                return inNumbers[2];
+            }
+            else
+            {
+                return inNumbers[3];
+            }
+        }
+
+        public static double IfLessFunction(List<double> inNumbers)
+        {
+            if (inNumbers[0] < inNumbers[1])
+            {
+                return inNumbers[2];
+            }
+            else
+            {
+                return inNumbers[3];
+            }
+        }
+
+        public static double IfLessOrEqualsFunction(List<double> inNumbers)
+        {
+            if (inNumbers[0] <= inNumbers[1])
+            {
+                return inNumbers[2];
+            }
+            else
+            {
+                return inNumbers[3];
+            }
+        }
+
+        public static double IfZeroFunction(List<double> inNumbers)
+        {
+            if (inNumbers[0] == 0)
+            {
+                return inNumbers[1];
+            }
+            else
+            {
+                return inNumbers[2];
+            }
+        }
+
+        public static double IfOneFunction(List<double> inNumbers)
+        {
+            if (inNumbers[0] == 1)
+            {
+                return inNumbers[1];
+            }
+            else
+            {
+                return inNumbers[2];
+            }
         }
     }
 }
