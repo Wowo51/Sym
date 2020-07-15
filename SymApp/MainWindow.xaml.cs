@@ -536,10 +536,13 @@ namespace SymApp
                 return;
             }
             Node transformedNode = Transform.TransformNode(transformMe, transform, operators);
-            string transformedResult = Node.Join(transformedNode);
-            if (transformedResult != "" & transformedResult != null)
+            if (transformedNode != null)
             {
-                PutTextInTextBox(transformedResult);
+                string transformedResult = Node.Join(transformedNode);
+                if (transformedResult != "" & transformedResult != null)
+                {
+                    PutTextInTextBox(transformedResult);
+                }
             }
         }
 
