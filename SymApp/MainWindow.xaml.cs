@@ -29,7 +29,7 @@ namespace SymApp
         bool isSolving = false;
         public int MaxRepetitions = 1000;
         public int MaxPopulationSize = 100;
-        public bool PostSolverLog = false;
+        public bool PostSolverLog = true;
 
         public MainWindow()
         {

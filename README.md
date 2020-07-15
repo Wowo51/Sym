@@ -5,4 +5,4 @@ Symbolic computation, symbolic regression, AI. By SymbolicComputation.com.
 
 [SymAI help](symai.md)
 
-Sym is under construction.
+Sym is under construction. This project is at the early alpha stage, there will be bugs and breaking changes at this point.

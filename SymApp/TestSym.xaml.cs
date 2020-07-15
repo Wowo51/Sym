@@ -101,14 +101,23 @@ namespace SymApp
                             if (double.IsInfinity(newEquation.Value) == false & double.IsNaN(newEquation.Value) == false)
                             {
                                 newEquation.FullEquation = newEquation.LHSExpression + "=" + newEquation.Value.ToString();
+
                                 Node fullEquationNode = Node.Parse(newEquation.FullEquation, operators);
+                                string lStr3 = Node.Join(fullEquationNode);
+                                int countTestTransform = 0;
                                 foreach (Transform transformToTest in transformsToTest)
                                 {
+                                    countTestTransform++;
+
                                     List<Node> testInstances = TransformBranchFunctions.TransformBranchesWithTransform(fullEquationNode, transformToTest, operators);
+                                    int countTestInstances = 0;
                                     foreach (Node testInstance in testInstances)
                                     {
                                         countEquationsTested++;
+                                        countTestInstances++;
+                                        string lStr = Node.Join(testInstance);
                                         Node workNode2 = testInstance.Clone();
+                                        string lStr2 = Node.Join(workNode2);
                                         workNode2 = TransformBranchFunctions.TransformBranchesWithTransformsToOneResult(workNode2, newEquation.VariableValueTransforms, operators);
                                         if (workNode2 != null)
                                         {

@@ -24,16 +24,20 @@ namespace Sym
 
         public static List<Node> TransformBranchesWithTransform(Node root, Transform transform, List<Operator> operators)
         {
-            Node rootClone = root.Clone();
+            Node rootClone1 = root.Clone();
             List<Node> lOut = new List<Node>();
-            List<Node> branches = rootClone.DescendantsAndSelf();
-            for (int branchIndex = 0; branchIndex < branches.Count; branchIndex++)
+            List<Node> branches1 = rootClone1.DescendantsAndSelf();
+            for (int branchIndex = 0; branchIndex < branches1.Count; branchIndex++)
             {
-                Node branch = branches[branchIndex];
+                Node branch = branches1[branchIndex];
                 Node transformedBranch = Transform.TransformNode(branch, transform, operators);
                 if (transformedBranch != null)
                 {
-                    Node newRoot = Node.ReplaceBranch(branches, branchIndex, transformedBranch);
+                    Node rootClone2 = root.Clone();
+                    List<Node> branches2 = rootClone2.DescendantsAndSelf();
+                    string lStr = Node.Join(rootClone2);
+                    Node newRoot = Node.ReplaceBranch(branches2, branchIndex, transformedBranch);
+                    string lStr2 = Node.Join(newRoot);
                     lOut.Add(newRoot);
                 }
             }
@@ -67,6 +71,7 @@ namespace Sym
             foreach (Node child in node.Children)
             {
                 Node newChild = TransformBranchesWithTransformToOneResult(child, inTransform, operators, ref didTransform);
+                newChild.Parent = node;
                 newChildren.Add(newChild);
             }
             node.Children = newChildren;

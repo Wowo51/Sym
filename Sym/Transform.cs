@@ -129,7 +129,7 @@ namespace Sym
         {
             List<ReplacementPair> replacementPairs = new List<ReplacementPair>();
             bool foundMisMatch = false;
-            GetReplacementPairs(transform.Left, transformMe, replacementPairs, ref foundMisMatch, operators);
+            GetReplacementPairs(transform.Left.Clone(), transformMe, replacementPairs, ref foundMisMatch, operators);
             if (foundMisMatch == false)
             {
                 return ReplaceFunctions(transform.Right.Clone(), replacementPairs, operators);

@@ -393,8 +393,9 @@ namespace Sym.Nodes
             {
                 int replaceIndex = replaceMe.Parent.Children.IndexOf(replaceMe);
                 replaceMe.Parent.Children.RemoveAt(replaceIndex);
-                replaceMe.Parent.Children.Add(newBranch);
+                replaceMe.Parent.Children.Insert(replaceIndex, newBranch);
                 newBranch.Parent = replaceMe.Parent;
+
                 return replaceMyBranch.Last();
             }
             else
@@ -469,6 +470,7 @@ namespace Sym.Nodes
             foreach (Node child in workNode.Children)
             {
                 Node newChild = RemoveDoubleNegatives(child);
+                newChild.Parent = workNode;
                 newChildren.Add(newChild);
             }
             workNode.Children = newChildren;

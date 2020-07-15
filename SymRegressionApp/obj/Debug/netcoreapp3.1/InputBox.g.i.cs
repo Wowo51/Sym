@@ -69,7 +69,7 @@ namespace SymRegressionApp {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/SymRegressionApp;component/inputbox.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/SymRegressionApp;V0.1.0.0;component/inputbox.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\InputBox.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

@@ -45,7 +45,7 @@ namespace Sym.Goals
                     double leftScorePenalty = (double)leftMatches.Count * LeftMatchScore;
                     double leftLengthPenalty = leftDescendants.Count * LeftLengthScore;
                     double score = leftLengthPenalty + rightScorePenalty + leftScorePenalty;
-                    string lStr = Node.Join(potentialSolution);
+                    //string lStr = Node.Join(potentialSolution);
                     if (leftVariableNodes.Count == 1 && leftDescendants.Count == 1 && rightMatches.Count == 0)
                     {
                         score += SingleVariableOnLeftScore;

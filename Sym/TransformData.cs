@@ -250,8 +250,8 @@ namespace Sym
         public static List<string> Factoring()
         {
             List<string> lOut = new List<string>();
-            lOut.Add("(a-b)*c=0~a=b");
-            lOut.Add("(a+b)*c=0~a=-b");
+            //lOut.Add("(a-b)*c=0~a=b");
+            //lOut.Add("(a+b)*c=0~a=-b");
             lOut.Add("a*Pow(x,2)+b*x+c=0~x=(-b+Sqrt(Pow(b,2)-4*a*c))/(2*a)");
             lOut.Add("a*Pow(x,2)+b*x+c=0~x=(-b-Sqrt(Pow(b,2)-4*a*c))/(2*a)");
             return lOut;

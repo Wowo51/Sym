@@ -109,7 +109,7 @@ namespace SymRegressionApp {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/SymRegressionApp;component/forecastingwindow.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/SymRegressionApp;V0.1.0.0;component/forecastingwindow.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\ForecastingWindow.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);
