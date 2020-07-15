@@ -29,7 +29,7 @@ namespace SymApp
         bool isSolving = false;
         public int MaxRepetitions = 1000;
         public int MaxPopulationSize = 100;
-        public bool PostSolverLog = true;
+        public bool PostSolverLog = false;
 
         public MainWindow()
         {
@@ -525,16 +525,16 @@ namespace SymApp
             Transform transform = null;
             Node transformMe = null;
             List<Operator> operators = Operator.BuildOperators();
-            //try
-            //{
-            transformMe = Node.Parse(transformMeString, operators);
-            transform = Transform.StringToTransform(transformString, operators);
-            //}
-            //catch
-            //{
-            //    MessageBox.Show("Parse fail. Did you an expression and transform in valid C# syntax?");
-            //    return;
-            //}
+            try
+            {
+                transformMe = Node.Parse(transformMeString, operators);
+                transform = Transform.StringToTransform(transformString, operators);
+            }
+            catch
+            {
+                MessageBox.Show("Parse fail. Did you an expression and transform in valid C# syntax?");
+                return;
+            }
             Node transformedNode = Transform.TransformNode(transformMe, transform, operators);
             string transformedResult = Node.Join(transformedNode);
             if (transformedResult != "" & transformedResult != null)
@@ -731,6 +731,7 @@ namespace SymApp
             catch
             {
                 MessageBox.Show("Parse fail. Did you enter an expression and a transform in valid C#?");
+                return;
             }
             bool didTransform = false;
             Node transformedNode = TransformBranchFunctions.TransformBranchesWithTransformToOneResult(transformMe, transform, operators, ref didTransform);

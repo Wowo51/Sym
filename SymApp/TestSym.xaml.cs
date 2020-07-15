@@ -69,7 +69,7 @@ namespace SymApp
             TestEquation seedZ = new TestEquation();
             seedZ.LHSExpression = "z";
             testEquations.Add(seedZ);
-            Random random = new Random();
+            Random random = new Random(1);
             List<ErrorReport> errorReports = new List<ErrorReport>();
             int countEquationsTested = 0;
             //EvaluateBranches evaluate = new EvaluateBranches();
@@ -91,7 +91,7 @@ namespace SymApp
                         {
                             TestEquation newEquation = new TestEquation();
                             newEquation.LHSExpression = newExpressionString;
-                            string[] variableValueTransformStrings = variableSet.Select(x => "V" + x + "~" + Convert.ToString(random.NextDouble() * 20d - 10d).Trim()).ToArray();
+                            string[] variableValueTransformStrings = variableSet.Select(x => "V" + x + "~" + Convert.ToString(random.NextDouble() * 2d - 1d).Trim()).ToArray();
                             newEquation.VariableValueTransforms = variableValueTransformStrings.Select(x => Transform.StringToTransform(x, operators)).ToList();
                             Node workNode1 = Node.Parse(newEquation.LHSExpression, operators);
                             string temp1 = Node.Join(workNode1);
@@ -126,7 +126,11 @@ namespace SymApp
                                             Node rightNode = Node.Parse(sides[1], operators);
                                             double lhsValue = Evaluation.Evaluate(leftNode);
                                             double rhsValue = Evaluation.Evaluate(rightNode);
-                                            if (Math.Abs(lhsValue - rhsValue) > .0001d)
+                                            double lhsLeftOfDecimal = lhsValue.ToString().Split(".")[0].Length;
+                                            double rhsLeftOfDecimal = rhsValue.ToString().Split(".")[0].Length;
+                                            double adjustedLhsValue = lhsValue / Math.Pow(10 , lhsLeftOfDecimal);
+                                            double adjustedRhsValue = rhsValue / Math.Pow(10, rhsLeftOfDecimal);
+                                            if (Math.Abs(adjustedLhsValue - adjustedRhsValue) > .0001d)
                                             {
                                                 ErrorReport errorReport = new ErrorReport();
                                                 errorReport.InitialExpression = newEquation.FullEquation;
@@ -187,17 +191,36 @@ namespace SymApp
         public static List<string> GenerationTransforms()
         {
             List<string> lOut = new List<string>();
-            lOut.Add("x~x+x");
-            lOut.Add("x~x-x");
-            lOut.Add("x~x*x");
-            lOut.Add("x~x/x");
-            lOut.Add("x~Sin(x)");
-            lOut.Add("x~Cos(x)");
-            lOut.Add("x~Tan(x)");
+            lOut.Add("a~Sin(x)");
+            lOut.Add("a~Cos(x)");
+            lOut.Add("a~Tan(x)");
+            lOut.Add("a~Sin(y)");
+            lOut.Add("a~Cos(y)");
+            lOut.Add("a~Tan(y)");
+            lOut.Add("a~Sin(z)");
+            lOut.Add("a~Cos(z)");
+            lOut.Add("a~Tan(z)");
+            lOut.Add("a~(x)");
+            lOut.Add("a~(y)");
+            lOut.Add("a~(z)");
+            lOut.Add("a~Pow(x,y)");
+            lOut.Add("a~Pow(x,z)");
+            lOut.Add("a~Pow(y,z)");
             lOut.Add("a~x+y");
-            lOut.Add("a~y-z");
-            lOut.Add("a~z*x");
+            lOut.Add("a~x-y");
+            lOut.Add("a~x*y");
             lOut.Add("a~x/y");
+            lOut.Add("a~x+z");
+            lOut.Add("a~x-z");
+            lOut.Add("a~x*z");
+            lOut.Add("a~x/z");
+            lOut.Add("a~y+z");
+            lOut.Add("a~y-z");
+            lOut.Add("a~y*z");
+            lOut.Add("a~y/z");
+            lOut.Add("a~x");
+            lOut.Add("a~y");
+            lOut.Add("a~z");
             return lOut;
         }
     }

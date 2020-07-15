@@ -35,11 +35,12 @@ namespace Sym
             operators.Add(new Operator("Abs", 16, OperatorType.Enclosing, AbsFunction));
             operators.Add(new Operator("Sqrt", 17, OperatorType.Enclosing, SqrtFunction));
 
-            operators.Add(new Operator("IfEquals", 18, OperatorType.Enclosing, IfEqualsFunction));
-            operators.Add(new Operator("IfLess", 19, OperatorType.Enclosing, IfLessFunction));
-            operators.Add(new Operator("IfLessOrEquals", 20, OperatorType.Enclosing, IfLessOrEqualsFunction));
-            operators.Add(new Operator("IfZero", 21, OperatorType.Enclosing, IfZeroFunction));
-            operators.Add(new Operator("IfOne", 22, OperatorType.Enclosing, IfOneFunction));
+            //These should be moved to SymAI.Regression
+            //operators.Add(new Operator("IfEquals", 18, OperatorType.Enclosing, IfEqualsFunction));
+            //operators.Add(new Operator("IfLess", 19, OperatorType.Enclosing, IfLessFunction));
+            //operators.Add(new Operator("IfLessOrEquals", 20, OperatorType.Enclosing, IfLessOrEqualsFunction));
+            //operators.Add(new Operator("IfZero", 21, OperatorType.Enclosing, IfZeroFunction));
+            //operators.Add(new Operator("IfOne", 22, OperatorType.Enclosing, IfOneFunction));
 
             return operators;
         }

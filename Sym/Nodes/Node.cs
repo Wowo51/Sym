@@ -285,14 +285,27 @@ namespace Sym.Nodes
             return operands;
         }
 
+        //public static string RemoveEnclosingBrackets(string cleanMe)
+        //{
+        //    if (cleanMe.First() == '(' && cleanMe.Last() == ')')
+        //    {
+        //        string test = cleanMe.Substring(1, cleanMe.Length - 2);
+        //        if (test.Contains("(") == false && test.Contains(")") == false)
+        //        {
+        //            return test;
+        //        }
+        //    }
+        //    return cleanMe;
+        //}
+
         public static string RemoveEnclosingBrackets(string cleanMe)
         {
             if (cleanMe.First() == '(' && cleanMe.Last() == ')')
             {
-                string test = cleanMe.Substring(1, cleanMe.Length - 2);
-                if (test.Contains("(") == false && test.Contains(")") == false)
+                List<int> bracketDepths = BracketDepths(cleanMe);
+                if (bracketDepths.Last() == 0)
                 {
-                    return test;
+                    return cleanMe.Substring(1, cleanMe.Length - 2);
                 }
             }
             return cleanMe;
@@ -403,40 +416,6 @@ namespace Sym.Nodes
                 return newBranch;
             }
         }
-
-        //public static Node ReplaceNodes(Node root, List<Node> replaceMes, List<Node> replacements)
-        //{
-        //    for (int i = 0; i < replaceMes.Count; i++)
-        //    {
-        //        root = ReplaceNode(root, replaceMes[i], replacements[i]);
-        //    }
-        //    return root;
-        //}
-
-
-        //public static Node ReplaceNode(Node root, Node replaceMe, Node replacement)
-        //{
-        //    bool didReplacement = false;
-        //    return ReplaceNodeNest(root, replaceMe, replacement, ref didReplacement);
-        //}
-
-        //public static Node ReplaceNodeNest(Node node, Node replaceMe, Node replacement, ref bool didReplacement)
-        //{
-        //    if (node == replaceMe)
-        //    {
-        //        didReplacement = true;
-        //        return replacement;
-        //    }
-        //    List<Node> newChildren = new List<Node>();
-        //    foreach (Node child in node.Children)
-        //    {
-        //        Node newChild = ReplaceNodeNest(child, replaceMe, replacement, ref didReplacement);
-        //        newChild.Parent = node;
-        //        newChildren.Add(newChild);
-        //    }
-        //    node.Children = newChildren;
-        //    return node;
-        //}
 
         public static Node RemoveDoubleNegatives(Node inNode)
         {
