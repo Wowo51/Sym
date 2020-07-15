@@ -23,10 +23,10 @@ namespace SymApp
     /// </summary>
     public partial class MainWindow : Window
     {
-        FileIODataContract<AppData> pubFileIO = new FileIODataContract<AppData>();
+        FileIODataContract<AppData> FileIO = new FileIODataContract<AppData>();
         public Solvers Solvers = new Solvers();
-        SolverDialog solverDialog;
-        bool isSolving = false;
+        SolverDialog SolverDialog;
+        bool IsSolving = false;
         public int MaxRepetitions = 1000;
         public int MaxPopulationSize = 100;
         public bool PostSolverLog = false;
@@ -41,7 +41,7 @@ namespace SymApp
 
         private void Solvers_FinishedRepetition(List<Solvers.PotentialAnswer> potentialAnswers)
         {
-            Dispatcher.Invoke(() => solverDialog.lbl1.Content = "Best so far:  " + potentialAnswers[0].EquationString);
+            Dispatcher.Invoke(() => SolverDialog.lbl1.Content = "Best so far:  " + potentialAnswers[0].EquationString);
             if (PostSolverLog)
             {
                 string[] rows = potentialAnswers.Select(x => x.EquationString + "   " + x.Fitness.ToString()).ToArray();
@@ -62,7 +62,7 @@ namespace SymApp
         private void FileOpen_Click(object sender, RoutedEventArgs e)
         {
             AppData appData = new AppData();
-            bool result = pubFileIO.Open(ref appData);
+            bool result = FileIO.Open(ref appData);
             if (result)
             {
                 AppDataToInterface(appData);
@@ -72,13 +72,13 @@ namespace SymApp
         private void FileSave_Click(object sender, RoutedEventArgs e)
         {
             AppData appData = InterfaceToAppData();
-            pubFileIO.Save(ref appData);
+            FileIO.Save(ref appData);
         }
 
         private void FileSaveAs_Click(object sender, RoutedEventArgs e)
         {
             AppData appData = InterfaceToAppData();
-            pubFileIO.SaveAs(ref appData);
+            FileIO.SaveAs(ref appData);
         }
 
         private void FileQuit_Click(object sender, RoutedEventArgs e)
@@ -167,7 +167,7 @@ namespace SymApp
         {
             NewTab(false, "Tab 1");
             InitializeTransformTabs();
-            pubFileIO.SetFilters("Sym Files", "sca");
+            FileIO.SetFilters("Sym Files", "sca");
         }
 
         public void NewTab(bool nameTab, string tabName)
@@ -390,7 +390,7 @@ namespace SymApp
             if (result == MessageBoxResult.Yes)
             {
                 AppData appData = InterfaceToAppData();
-                pubFileIO.SaveAs(ref appData);
+                FileIO.SaveAs(ref appData);
             }
             else if (result == MessageBoxResult.Cancel)
             {
@@ -552,17 +552,17 @@ namespace SymApp
             }
             double result;
             List<Operator> operators = Operator.BuildOperators();
-            //try
-            //{
-            Node node = Node.Parse(selectedText, operators);
-            List<Node> branches = node.DescendantsAndSelf();
-            result = Evaluation.Evaluate(node);
-            //}
-            //catch
-            //{
-            //    MessageBox.Show("Couldn't evaluate, did you enter an expression with all numeric values and no variables?");
-            //    return;
-            //}
+            try
+            {
+                Node node = Node.Parse(selectedText, operators);
+                //List<Node> branches = node.DescendantsAndSelf();
+                result = Evaluation.Evaluate(node);
+            }
+            catch
+            {
+                MessageBox.Show("Couldn't evaluate, did you enter an expression with all numeric values and no variables?");
+                return;
+            }
             if (double.IsNaN(result))
             {
                 MessageBox.Show("Couldn't evaluate, did you enter an expression with all numeric values and no variables?");
@@ -575,45 +575,45 @@ namespace SymApp
 
         private async void btnIsolate_Click(object sender, RoutedEventArgs e)
         {
-            if (isSolving)
+            if (IsSolving)
             {
                 MessageBox.Show("The solver is busy.");
                 return;
             }
-            isSolving = true;
+            IsSolving = true;
             InputBox inputBox = new InputBox();
             inputBox.Label1.Content = "Enter the variable you want to isolate.";
             inputBox.ShowDialog();
             string isolateMe = inputBox.TextBox1.Text;
             if (isolateMe == null | isolateMe == "")
             {
-                isSolving = false;
+                IsSolving = false;
                 return;
             }
             //string equation = this.GetLine();
             string equation = this.GetMainLine();
             if (equation == "" | equation == null)
             {
-                isSolving = false;
+                IsSolving = false;
                 return;
             }
             if (equation.Contains("=") == false)
             {
                 MessageBox.Show("You have to enter an equation.");
-                isSolving = false;
+                IsSolving = false;
                 return;
             }
-            solverDialog = new SolverDialog();
-            solverDialog.ParentWindow = this;
-            solverDialog.Show();
+            SolverDialog = new SolverDialog();
+            SolverDialog.ParentWindow = this;
+            SolverDialog.Show();
             List<Operator> operators = Operator.BuildOperators();
             string transformedResult = await Task.Run(() => Solvers.Isolate(equation, isolateMe, MaxRepetitions, MaxPopulationSize, operators));
-            solverDialog.Close();
+            SolverDialog.Close();
             if (transformedResult != "" & transformedResult != null)
             {
                 PutTextInTextBox(transformedResult);
             }
-            isSolving = false;
+            IsSolving = false;
         }
 
         private void btnCopyLine_Click(object sender, RoutedEventArgs e)
@@ -624,84 +624,84 @@ namespace SymApp
 
         private async void btnDerivative_Click(object sender, RoutedEventArgs e)
         {
-            if (isSolving)
+            if (IsSolving)
             {
                 MessageBox.Show("The solver is busy.");
                 return;
             }
-            isSolving = true;
+            IsSolving = true;
             string transformMe = this.GetMainLine();
             if (transformMe == "" | transformMe == null)
             {
-                isSolving = false;
+                IsSolving = false;
                 return;
             }
-            solverDialog = new SolverDialog();
-            solverDialog.ParentWindow = this;
-            solverDialog.Show();
+            SolverDialog = new SolverDialog();
+            SolverDialog.ParentWindow = this;
+            SolverDialog.Show();
             List<Operator> operators = Operator.BuildOperators();
             string transformedResult = await Task.Run(() => Solvers.Derivative(transformMe, MaxRepetitions, MaxPopulationSize, operators));
-            solverDialog.Close();
+            SolverDialog.Close();
             if (transformedResult != "" & transformedResult != null)
             {
                 PutTextInTextBox(transformedResult);
             }
-            isSolving = false;
+            IsSolving = false;
         }
 
         private async void btnPartialDerivative_Click(object sender, RoutedEventArgs e)
         {
-            if (isSolving)
+            if (IsSolving)
             {
                 MessageBox.Show("The solver is busy.");
                 return;
             }
-            isSolving = true;
+            IsSolving = true;
             string transformMe = this.GetMainLine();
             if (transformMe == "" | transformMe == null)
             {
-                isSolving = false;
+                IsSolving = false;
                 return;
             }
-            solverDialog = new SolverDialog();
-            solverDialog.ParentWindow = this;
-            solverDialog.Show();
+            SolverDialog = new SolverDialog();
+            SolverDialog.ParentWindow = this;
+            SolverDialog.Show();
             List<Operator> operators = Operator.BuildOperators();
             string transformedResult = await Task.Run(() => Solvers.PartialDerivative(transformMe, MaxRepetitions, MaxPopulationSize, operators));
-            solverDialog.Close();
-            solverDialog = null;
+            SolverDialog.Close();
+            SolverDialog = null;
             if (transformedResult != "" & transformedResult != null)
             {
                 PutTextInTextBox(transformedResult);
             }
-            isSolving = false;
+            IsSolving = false;
         }
 
         private async void btnSimplify_Click(object sender, RoutedEventArgs e)
         {
-            if (isSolving)
+            if (IsSolving)
             {
                 MessageBox.Show("The solver is busy.");
                 return;
             }
-            isSolving = true;
+            IsSolving = true;
             string transformMe = this.GetMainLine();
             if (transformMe == "" | transformMe == null)
             {
-                isSolving = false;
+                IsSolving = false;
                 return;
             }
-            solverDialog = new SolverDialog();
-            solverDialog.ParentWindow = this;
-            solverDialog.Show();
+            SolverDialog = new SolverDialog();
+            SolverDialog.ParentWindow = this;
+            SolverDialog.Show();
             List<Operator> operators = Operator.BuildOperators();
             string transformedResult = await Task.Run(() => Solvers.Simplify(transformMe, MaxRepetitions, MaxPopulationSize, operators));
-            solverDialog.Close();
+            SolverDialog.Close();
             if (transformedResult != "" & transformedResult != null)
             {
                 PutTextInTextBox(transformedResult);
             }
-            isSolving = false;
+            IsSolving = false;
         }
 
         private void btnSubstitute_Click(object sender, RoutedEventArgs e)
@@ -765,6 +765,7 @@ namespace SymApp
             catch
             {
                 MessageBox.Show("Parse fail. Did you enter an expression and a transform in valid C#?");
+                return;
             }
             bool didTransform = false;
             Node transformedNode = TransformBranchFunctions.TransformBranchesWithTransformToOneResult(transformMe, transform, operators, ref didTransform);
@@ -793,38 +794,38 @@ namespace SymApp
 
         private async void btnSolveSystem_Click(object sender, RoutedEventArgs e)
         {
-            if (isSolving)
+            if (IsSolving)
             {
                 MessageBox.Show("The solver is busy.");
                 return;
             }
-            isSolving = true;
+            IsSolving = true;
             InputBox inputBox = new InputBox();
             inputBox.Label1.Content = "Enter the variable you want to isolate.";
             inputBox.ShowDialog();
             string isolateMe = inputBox.TextBox1.Text;
             if (isolateMe == null | isolateMe == "")
             {
-                isSolving = false;
+                IsSolving = false;
                 return;
             }
             string transformMe = this.GetSelectedText();
             if (transformMe == "" | transformMe == null)
             {
-                isSolving = false;
+                IsSolving = false;
                 return;
             }
-            solverDialog = new SolverDialog();
-            solverDialog.ParentWindow = this;
-            solverDialog.Show();
+            SolverDialog = new SolverDialog();
+            SolverDialog.ParentWindow = this;
+            SolverDialog.Show();
             List<Operator> operators = Operator.BuildOperators();
             string transformedResult = await Task.Run(() => Solvers.SolveSystem(transformMe, isolateMe, MaxRepetitions, MaxPopulationSize, operators));
-            solverDialog.Close();
+            SolverDialog.Close();
             if (transformedResult != "" & transformedResult != null)
             {
                 PutTextInTextBox(transformedResult);
             }
-            isSolving = false;
+            IsSolving = false;
         }
     }
 }
