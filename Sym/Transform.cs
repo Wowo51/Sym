@@ -27,8 +27,9 @@ namespace Sym
                 Node transformed = TransformMatchedNode(transformMe, transform, operators);
                 if (transformed != null)
                 {
-                    Node cleaned = Node.RemoveDoubleNegatives(transformed);
-                    return cleaned;
+                    //Node cleaned = Node.RemoveDoubleNegatives(transformed);
+                    //return cleaned;
+                    return transformed;
                 }
             }
             return null;

@@ -35,9 +35,7 @@ namespace Sym
                 {
                     Node rootClone2 = root.Clone();
                     List<Node> branches2 = rootClone2.DescendantsAndSelf();
-                    string lStr = Node.Join(rootClone2);
                     Node newRoot = Node.ReplaceBranch(branches2, branchIndex, transformedBranch);
-                    string lStr2 = Node.Join(newRoot);
                     lOut.Add(newRoot);
                 }
             }
@@ -61,6 +59,11 @@ namespace Sym
 
         public static Node TransformBranchesWithTransformToOneResult(Node node, Transform inTransform, List<Operator> operators, ref bool didTransform)
         {
+            return TransformBranchesWithTransformToOneResultNest(node.Clone(), inTransform, operators, ref didTransform);
+        }
+
+        public static Node TransformBranchesWithTransformToOneResultNest(Node node, Transform inTransform, List<Operator> operators, ref bool didTransform)
+        {
             Node testNode = Transform.TransformNode(node, inTransform, operators);
             if (testNode != null)
             {
@@ -70,7 +73,7 @@ namespace Sym
             List<Node> newChildren = new List<Node>();
             foreach (Node child in node.Children)
             {
-                Node newChild = TransformBranchesWithTransformToOneResult(child, inTransform, operators, ref didTransform);
+                Node newChild = TransformBranchesWithTransformToOneResultNest(child, inTransform, operators, ref didTransform);
                 newChild.Parent = node;
                 newChildren.Add(newChild);
             }

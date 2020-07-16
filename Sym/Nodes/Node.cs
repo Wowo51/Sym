@@ -13,8 +13,8 @@ namespace Sym.Nodes
 
         public static string Join(Node inNode, string useNumbers = "")
         {
-            string lStr = JoinNest(inNode, useNumbers);
-            return lStr.Replace("--", "+").Replace("+-", "-");
+            string outExpression = JoinNest(inNode, useNumbers);
+            return RemoveUneccessaryOperators(outExpression);
         }
 
         public static string JoinNest(Node inNode, string useNumbers = "")
@@ -117,12 +117,7 @@ namespace Sym.Nodes
 
         public static Node Parse(string inExpression, List<Operator> operators)
         {
-            inExpression = RemoveEnclosingBrackets(inExpression);
-            inExpression = inExpression.Replace("--", "+").Replace("+-", "-").Replace("++", "+");
-            if (inExpression.First() == '+')
-            {
-                inExpression = inExpression.Substring(1, inExpression.Length - 1);
-            }
+            //inExpression = RemoveEnclosingBrackets(inExpression);
             double number;
             if (double.TryParse(inExpression, out number))
             {
@@ -180,6 +175,16 @@ namespace Sym.Nodes
                 variableNode.VariableNodeType = VariableNodeType.NoRequirement;
             }
             return variableNode;
+        }
+
+        public static string RemoveUneccessaryOperators(string inExpression)
+        {
+            string outExpression = inExpression.Replace("--", "+").Replace("+-", "-").Replace("++", "+");
+            if (outExpression.First() == '+')
+            {
+                outExpression = outExpression.Substring(1, outExpression.Length - 1);
+            }
+            return outExpression;
         }
 
         public static Node ParseNewEnclosing(string inExpression, out bool foundOperator, List<Operator> operators)

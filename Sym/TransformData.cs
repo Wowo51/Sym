@@ -67,8 +67,8 @@ namespace Sym
             List<string> lOut = new List<string>();
             lOut.Add("a*(b+c)~a*b+a*c");
             lOut.Add("a*(b-c)~a*b-a*c");
-            lOut.Add("a*b+a*c~a*(b+c)");
-            lOut.Add("a*b-a*c~a*(b-c)");
+            lOut.Add("a*c+b*c~(a+b)*c");
+            lOut.Add("a*c-b*c~(a-b)*c");
             lOut.Add("a/c+b/c~(a+b)/c");
             lOut.Add("a/c-b/c~(a-b)/c");
             lOut.Add("(a+b)/c~a/c+b/c");
@@ -110,7 +110,13 @@ namespace Sym
             lOut.Add("a+b+c~a+c+b");
             lOut.Add("a*b/c~(a/c)*b");
             lOut.Add("a+b*a~(b+1)*a");
+            lOut.Add("a-b*a~(1-b)*a");
             lOut.Add("-(-a-b)~a+b");
+            lOut.Add("a-b-c~a-c-b");
+            lOut.Add("a-b-c=d~a-b=d+c");
+            lOut.Add("a=b-c~a-b=-c");
+            lOut.Add("a-(b-c)~a-b+c");
+            lOut.Add("a+b+c=d~a+b=d-c");
             //lOut.AddRange(Isolate());
             return lOut;
         }
@@ -175,24 +181,29 @@ namespace Sym
             //lOut.Add("a-(b/c)~a-b/c");
             lOut.Add("Pow(a,1)~a");
             lOut.Add("Pow(a,0)~1");
-            lOut.Add("(-V)*a~-V*a");
-            lOut.Add("(-V)+a~-V+a");
-            lOut.Add("(-V)-a~-V-a");
-            lOut.Add("(-V)/a~-V/a");
-            lOut.Add("(-C)*a~-C*a");
-            lOut.Add("(-C)+a~-C+a");
-            lOut.Add("(-C)-a~-C-a");
-            lOut.Add("(-C)/a~-C/a");
-            lOut.Add("x-(-V)~x+V");
-            lOut.Add("x+(-V)~x-V");
-            lOut.Add("x-(-C)~x+C");
-            lOut.Add("x+(-C)~x-C");
+            //lOut.Add("(-V)*a~-V*a");
+            //lOut.Add("(-V)+a~-V+a");
+            //lOut.Add("(-V)-a~-V-a");
+            //lOut.Add("(-V)/a~-V/a");
+            //lOut.Add("(-C)*a~-C*a");
+            //lOut.Add("(-C)+a~-C+a");
+            //lOut.Add("(-C)-a~-C-a");
+            //lOut.Add("(-C)/a~-C/a");
+            //lOut.Add("x-(-V)~x+V");
+            //lOut.Add("x+(-V)~x-V");
+            //lOut.Add("x-(-C)~x+C");
+            //lOut.Add("x+(-C)~x-C");
+            lOut.Add("(C)~C");
+            lOut.Add("(-C)~-C");
+            lOut.Add("(V)~V");
+            lOut.Add("(-V)~-V");
             lOut.Add("C1*C2*a~(C1*C2)*a");
             lOut.Add("C1/C2/a~(C1/C2)/a");
             lOut.Add("C1+C2+a~(C1+C2)+a");
             lOut.Add("C1-C2-a~(C1-C2)-a");
             //lOut.Add("a--b~a+b");
             //lOut.Add("a+-b~a-b");
+
             return lOut;
         }
 

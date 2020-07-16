@@ -11,13 +11,12 @@ namespace Sym.Goals
     public class IsolateGoal : Goal
     {
         public string VariableBeingSolvedFor;
-        public double RightMatchScore = 0d;
+        public double RightMatchScore = -1000d;
         public double LeftMatchScore = 0d;
         public double LeftLengthScore = -10d;
         public double SingleVariableOnLeftScore = 10000;
         public double VariablesScore = 0;
-        public double IsolatedScore = 100;
-        public double VariableCountScore = 1000;
+        public double VariableCountScore = -100;
         public bool SystemMode = false;
 
         public IsolateGoal(string variableBeingSolvedFor, bool systemMode)
@@ -51,18 +50,15 @@ namespace Sym.Goals
                         score += SingleVariableOnLeftScore;
                     }
                     score += VariablesScore * (double)(leftVariableNodes.Count + rightVariableNodes.Count);
-                    if (leftVariableNodes.Count == 1 && leftDescendants.Count == 1 && rightVariableNodes.Where(x => x.Variable == leftVariableNodes[0].Variable).ToList().Count == 0)
-                    {
-                        score += IsolatedScore;
-                    }
                     if (SystemMode)
                     {
                         int variableCount = potentialSolution.DescendantsAndSelf().Where(x => x is VariableNode).Select(x => (VariableNode)(x)).GroupBy(x => x.Variable).ToList().Count;
                         if (variableCount > 1)
                         {
-                            score -= variableCount * VariableCountScore;
+                            score += variableCount * VariableCountScore;
                         }
                     }
+                    string lStr = Node.Join(potentialSolution);
                     return score;
                 }
             }

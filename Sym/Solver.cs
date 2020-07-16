@@ -37,15 +37,24 @@ namespace Sym
                 {
                     solveMeAnswer.Equation = reducedSolveMe;
                     solveMeAnswer.EquationString = Node.Join(reducedSolveMe);
+                    //solveMeAnswer.Equation = Node.Parse(solveMeAnswer.EquationString, operators);
                 }
                 else
                 {
                     solveMeAnswer.Equation = solveMe;
                     solveMeAnswer.EquationString = Node.Join(solveMe);
+                    //solveMeAnswer.Equation = Node.Parse(solveMeAnswer.EquationString, operators);
                 }
                 solveMeAnswer.Fitness = Goal.CalculateGoalFitness(solveMeAnswer.Equation, goals);
                 solveMeAnswer.Isolated = IsIsolated(solveMeAnswer.Equation);
                 potentialAnswers.Add(solveMeAnswer);
+                
+                //PotentialAnswer reparsed = new PotentialAnswer();
+                //reparsed.Equation = Node.Parse(solveMeAnswer.EquationString, operators);
+                //reparsed.EquationString = solveMeAnswer.EquationString;
+                //solveMeAnswer.Fitness = Goal.CalculateGoalFitness(reparsed.Equation, goals);
+                //solveMeAnswer.Isolated = IsIsolated(reparsed.Equation);
+                //potentialAnswers.Add(reparsed);
             }
             bool foundNonExistantAnswer = false;
             List<double> bestFitnesses = new List<double>();
@@ -134,8 +143,9 @@ namespace Sym
             {
                 foundNonExistantAnswer = true;
                 PotentialAnswer newPotential = new PotentialAnswer();
-                newPotential.Equation = newAnswer;
+                //newPotential.Equation = newAnswer;
                 newPotential.EquationString = newEquationString1;
+                newPotential.Equation = Node.Parse(newPotential.EquationString, operators);
                 if (newEquationString1.Contains("∞") == false && newEquationString1.Contains("NaN") == false)
                 {
                     newPotential.Fitness = Goal.CalculateGoalFitness(newAnswer, goals);
@@ -263,7 +273,7 @@ namespace Sym
             transform.Left = leftTransform;
             transform.Right = provider.Children[1];
             bool didTransform = false;
-            Node outNode = TransformBranchFunctions.TransformBranchesWithTransformToOneResult(receiver.Clone(), transform, operators, ref didTransform);
+            Node outNode = TransformBranchFunctions.TransformBranchesWithTransformToOneResult(receiver, transform, operators, ref didTransform);
             if (didTransform)
             {
                 return outNode;

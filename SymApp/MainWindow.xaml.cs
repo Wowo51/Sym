@@ -28,7 +28,7 @@ namespace SymApp
         SolverDialog SolverDialog;
         bool IsSolving = false;
         public int MaxRepetitions = 1000;
-        public int MaxPopulationSize = 100;
+        public int MaxPopulationSize = 250;
         public bool PostSolverLog = false;
 
         public MainWindow()
