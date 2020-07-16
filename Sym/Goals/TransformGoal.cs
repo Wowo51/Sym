@@ -32,6 +32,7 @@ namespace Sym.Goals
             List<Goal> goals = new List<Goal>();
             goals.Add(new TransformGoal(1d, "C*V~0", operators));
             goals.Add(new TransformGoal(-1d, "V*C~0", operators));
+            goals.Add(new TransformGoal(1d, "V=x~0", operators));
             return goals;
         }
 
