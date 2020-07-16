@@ -87,13 +87,16 @@ namespace Sym
                     }
                     catch (OperationCanceledException e)
                     {
-                        Console.WriteLine(e.Message);
+                        //Console.WriteLine(e.Message);
                     }
                     finally
                     {
                         cancellationTokenSource.Dispose();
                     }
-
+                    if (stopSolving)
+                    {
+                        return potentialAnswersBag.OrderByDescending(x => x.Fitness).First().Equation;
+                    }
                 }
                 else
                 {

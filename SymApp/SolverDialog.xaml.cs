@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Threading;
 
 namespace SymApp
 {
@@ -33,7 +34,12 @@ namespace SymApp
         private void btnStop_Click(object sender, RoutedEventArgs e)
         {
             ParentWindow.Solvers.StopSolving = true;
-            Close();
+            //Title = "Shutting down solver.";
+            //while (ParentWindow.IsSolving)
+            //{
+            //    Thread.Sleep(500);               
+            //}
+            //Close();
         }
     }
 }

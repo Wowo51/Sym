@@ -26,7 +26,7 @@ namespace SymApp
         FileIODataContract<AppData> FileIO = new FileIODataContract<AppData>();
         public Solvers Solvers = new Solvers();
         SolverDialog SolverDialog;
-        bool IsSolving = false;
+        public bool IsSolving = false;
         public int MaxRepetitions = 1000;
         public int MaxPopulationSize = 250;
         public bool PostSolverLog = false;

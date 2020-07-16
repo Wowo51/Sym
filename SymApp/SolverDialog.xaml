@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SymApp"
         mc:Ignorable="d"
-        Title="SolverDialog" Height="200" Width="400">
+        Title="SolverDialog" Height="200" Width="400" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
