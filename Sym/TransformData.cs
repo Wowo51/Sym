@@ -87,6 +87,17 @@ namespace Sym
             lOut.Add("a-b=c~a=c+b");
             lOut.Add("a/b=c~a=c*b");
 
+            lOut.Add("a=b*c~a/c=b");
+            lOut.Add("a=b+c~a-c=b");
+            lOut.Add("a=b-c~a+c=b");
+            lOut.Add("a=b/c~a*c=b");
+
+            lOut.Add("a=b*c~a/c=b");
+            lOut.Add("a=b+c~a-c=b");
+            lOut.Add("a=b-c~a+c=b");
+            lOut.Add("a=-b+c~a-c=-b");
+            lOut.Add("a=b/c~a*c=b");
+
             lOut.Add("a*b=c~b=c/a");
             lOut.Add("a+b=c~b=c-a");
             lOut.Add("a-b=c~b=a-c");
@@ -117,32 +128,33 @@ namespace Sym
             lOut.Add("a=b-c~a-b=-c");
             lOut.Add("a-(b-c)~a-b+c");
             lOut.Add("a+b+c=d~a+b=d-c");
+            lOut.Add("a+b+c+d~(a+b)+(c+d)");
             //lOut.AddRange(Isolate());
             return lOut;
         }
 
-        public static List<string> Isolate()
-        {
-            List<string> lOut = new List<string>();
-            lOut.Add("a*b=c~a=c/b");
-            lOut.Add("a*b=c~b=c/a");
-            lOut.Add("a+b=c~a=c-b)");
-            lOut.Add("a+b=c~b=c-a)");
-            lOut.Add("a-b=c~a=c+b");
-            lOut.Add("a-b=c~b=a-c");
-            lOut.Add("a/b=c~a=c*b");
-            lOut.Add("a/b=c~b=a/c");
-            lOut.Add("-a=b~a=-b");
-            lOut.Add("(a)=b~a=b");
-            lOut.Add("Pow(a,b)=c~b=Log(c,a)");
-            //lOut.Add("Sin(fx)=fy~fx=Asin(fy)");
-            //lOut.Add("Cos(fx)=fy~fx=Acos(fy)");
-            //lOut.Add("Tan(fx)=fy~fx=Atan(fy)");
-            //lOut.Add("Asin(fx)=fy~fx=Sin(fy)");
-            //lOut.Add("Acos(fx)=fy~fx=Cos(fy)");
-            //lOut.Add("Atan(fx)=fy~fx=Tan(fy)");
-            return lOut;
-        }
+        //public static List<string> Isolate()
+        //{
+        //    List<string> lOut = new List<string>();
+        //    lOut.Add("a*b=c~a=c/b");
+        //    lOut.Add("a*b=c~b=c/a");
+        //    lOut.Add("a+b=c~a=c-b)");
+        //    lOut.Add("a+b=c~b=c-a)");
+        //    lOut.Add("a-b=c~a=c+b");
+        //    lOut.Add("a-b=c~b=a-c");
+        //    lOut.Add("a/b=c~a=c*b");
+        //    lOut.Add("a/b=c~b=a/c");
+        //    lOut.Add("-a=b~a=-b");
+        //    lOut.Add("(a)=b~a=b");
+        //    lOut.Add("Pow(a,b)=c~b=Log(c,a)");
+        //    //lOut.Add("Sin(fx)=fy~fx=Asin(fy)");
+        //    //lOut.Add("Cos(fx)=fy~fx=Acos(fy)");
+        //    //lOut.Add("Tan(fx)=fy~fx=Atan(fy)");
+        //    //lOut.Add("Asin(fx)=fy~fx=Sin(fy)");
+        //    //lOut.Add("Acos(fx)=fy~fx=Cos(fy)");
+        //    //lOut.Add("Atan(fx)=fy~fx=Tan(fy)");
+        //    return lOut;
+        //}
 
         public static List<string> SimplifyingAlgebraic()
         {

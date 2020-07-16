@@ -58,7 +58,7 @@ namespace Sym.Goals
                             score += variableCount * VariableCountScore;
                         }
                     }
-                    string lStr = Node.Join(potentialSolution);
+                    //string lStr = Node.Join(potentialSolution);
                     return score;
                 }
             }
