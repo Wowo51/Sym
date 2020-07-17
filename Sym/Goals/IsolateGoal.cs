@@ -13,7 +13,6 @@ namespace Sym.Goals
         public string VariableBeingSolvedFor;
         public double RightMatchScore = -1000d;
         public double LeftMatchScore = 0d;
-        public double LeftLengthScore = -10d;
         public double SingleVariableOnLeftScore = 10000;
         public double VariablesScore = 0;
         public double VariableCountScore = -100;
@@ -42,8 +41,7 @@ namespace Sym.Goals
                     List<VariableNode> leftMatches = leftVariableNodes.Where(x => x.Variable == VariableBeingSolvedFor).ToList();
                     double rightScorePenalty = (double)rightMatches.Count * RightMatchScore;
                     double leftScorePenalty = (double)leftMatches.Count * LeftMatchScore;
-                    double leftLengthPenalty = leftDescendants.Count * LeftLengthScore;
-                    double score = leftLengthPenalty + rightScorePenalty + leftScorePenalty;
+                    double score = rightScorePenalty + leftScorePenalty;
                     //string lStr = Node.Join(potentialSolution);
                     if (leftVariableNodes.Count == 1 && leftDescendants.Count == 1 && rightMatches.Count == 0)
                     {

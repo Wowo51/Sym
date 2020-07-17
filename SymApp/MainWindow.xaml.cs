@@ -472,7 +472,7 @@ namespace SymApp
 
         private void HelpAbout_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Copyright SymbolicComputation.com 2016");
+            MessageBox.Show("Copyright Warren Harding 2020.");
         }
 
         private void HelpHelp_Click(object sender, RoutedEventArgs e)

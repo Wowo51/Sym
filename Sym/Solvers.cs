@@ -8,6 +8,12 @@ namespace Sym
 {
     public class Solvers : Solver
     {
+        public string Simplify(string simplifyMe, int maxRepetitions, int maxPopulationSize)
+        {
+            List<Operator> operators = Operator.BuildOperators();
+            return Simplify(simplifyMe, maxPopulationSize, maxPopulationSize, operators);
+        }
+
         public string Simplify(string simplifyMe, int maxRepetitions, int maxPopulationSize, List<Operator> operators)
         {
             List<Goal> goals = TransformGoal.StandardFormTransformGoals(operators);
@@ -26,6 +32,12 @@ namespace Sym
             List<Transform> transforms = TransformData.AllAlgebraTransformsAsTransforms(operators);
             UseSubstitutions = true;
             return Solve(transformMe, goals, transforms, maxRepetitions, maxPopulationSize, operators);
+        }
+
+        public string Isolate(string transformMe, string isolateMe, int maxRepetitions, int maxPopulationSize)
+        {
+            List<Operator> operators = Operator.BuildOperators();
+            return Isolate(transformMe, isolateMe, maxRepetitions, maxPopulationSize, operators);
         }
 
         public string Isolate(string transformMe, string isolateMe, int maxRepetitions, int maxPopulationSize, List<Operator> operators)

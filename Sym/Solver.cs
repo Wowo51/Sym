@@ -124,7 +124,10 @@ namespace Sym
                         break;
                     }
                 }
-                FinishedRepetition(potentialAnswersSorted);
+                if (FinishedRepetition != null)
+                {
+                    FinishedRepetition(potentialAnswersSorted);
+                }
             }
             return potentialAnswersSorted.First().Equation;
         }

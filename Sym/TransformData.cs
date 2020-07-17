@@ -184,7 +184,8 @@ namespace Sym
             lOut.Add("a-(b/c)~a-b/c");
             lOut.Add("a*(b*c)~a*b*c");
             lOut.Add("a*(b/c)~a*b/c");
-            lOut.Add("((a))~(a)");
+            //lOut.Add("((a))~(a)");
+            lOut.Add("(a)~a");
             lOut.Add("-a=-b~a=b");
             lOut.Add("-a=-b~a=-b*-1");
             //lOut.Add("a+(b*c)~a+b*c");
@@ -205,10 +206,10 @@ namespace Sym
             //lOut.Add("x+(-V)~x-V");
             //lOut.Add("x-(-C)~x+C");
             //lOut.Add("x+(-C)~x-C");
-            lOut.Add("(C)~C");
-            lOut.Add("(-C)~-C");
-            lOut.Add("(V)~V");
-            lOut.Add("(-V)~-V");
+            //lOut.Add("(C)~C");
+            //lOut.Add("(-C)~-C");
+            //lOut.Add("(V)~V");
+            //lOut.Add("(-V)~-V");
             lOut.Add("C1*C2*a~(C1*C2)*a");
             lOut.Add("C1/C2/a~(C1/C2)/a");
             lOut.Add("C1+C2+a~(C1+C2)+a");

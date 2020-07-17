@@ -8,6 +8,13 @@ namespace Sym
 {
     public class Evaluation
     {
+        public static string Evaluate(string inString)
+        {
+            List<Operator> operators = Operator.BuildOperators();
+            Node root = Node.Parse(inString, operators);
+            return Evaluate(root).ToString();
+        }
+
         public static double Evaluate(Node inNode)
         {
             if (inNode is OperatorNode)
