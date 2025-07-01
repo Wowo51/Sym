@@ -7,7 +7,7 @@ using System.Linq;
 using System; 
 // Removed using System.Threading.Tasks; // For Parallel.For
 
-namespace Sym.Core
+namespace Sym.Core.Rewriters
 {
     /// <summary>
     /// Provides functionality for rewriting symbolic expressions based on a set of rules.
@@ -15,39 +15,66 @@ namespace Sym.Core
     public static class Rewriter
     {
         /// <summary>
-        /// Rewrites an expression by repeatedly applying a set of rules until no more rules can be applied.
-        /// This method traverses the expression tree and applies rules both at the top level and to sub-expressions.
+        /// Performs a single pass of rule application over the expression tree.
+        /// It attempts to apply a rule to the top-level expression first, and if not, recursively
+        /// applies rules to its sub-expressions. It performs one 'depth-first' traversal.
         /// </summary>
         /// <param name="expression">The expression to rewrite.</param>
         /// <param name="rules">The set of rules to apply.</param>
-        /// <returns>The rewritten expression.</returns>
-        public static IExpression Rewrite(IExpression expression, ImmutableList<Rule> rules)
+        /// <returns>A RewriterResult indicating the rewritten expression and whether any change occurred.</returns>
+        public static RewriterResult RewriteSinglePass(IExpression expression, ImmutableList<Rule> rules)
+        {
+            // ApplyRulesRecursively: applies one rule at top level, then recurses and applies one rule at each sub-level.
+            // It returns (new expression, true) if anything changed at all.
+            (IExpression newExpression, bool changed) = ApplyRulesRecursively(expression, rules);
+            return new RewriterResult(newExpression, changed);
+        }
+
+        /// <summary>
+        /// Alias for RewriteSinglePass, as expected by FullSimplificationStrategy specification.
+        /// </summary>
+        public static RewriterResult Rewrite(IExpression expression, ImmutableList<Rule> rules)
+        {
+            return RewriteSinglePass(expression, rules);
+        }
+
+        /// <summary>
+        /// Rewrites an expression by repeatedly applying a set of rules until no more rules can be applied
+        /// or a maximum number of internal iterations is reached.
+        /// This method repeatedly calls RewriteSinglePass until stabilization.
+        /// </summary>
+        /// <param name="expression">The expression to rewrite.</param>
+        /// <param name="rules">The set of rules to apply.</param>
+        /// <param name="maxInternalIterations">The maximum number of internal passes to attempt full simplification.</param>
+        /// <returns>A RewriterResult indicating the final rewritten expression and whether any change occurred.</returns>
+        public static RewriterResult RewriteFully(IExpression expression, ImmutableList<Rule> rules, int maxInternalIterations = 100)
         {
             IExpression currentExpression = expression;
-            bool changedLocallyThisIteration;
-            int maxIterations = 100; // Prevent infinite loops
+            bool overallChanged = false; // True if any change occurred during the entire rewrite process
+            bool changedInLastIteration;
             int iteration = 0;
 
             do
             {
-                changedLocallyThisIteration = false; // Reset for each iteration
-                // ApplyRulesRecursively now returns a tuple (newExpression, changedFlag)
-                (IExpression newExpression, bool changedInSubtree) = ApplyRulesRecursively(currentExpression, rules);
+                changedInLastIteration = false; 
+                // Perform a single deep pass of rewriting
+                RewriterResult singlePassResult = RewriteSinglePass(currentExpression, rules);
                 
-                // If the top-level expression reference has changed, or if anything changed in a subtree
-                if (!ReferenceEquals(newExpression, currentExpression) || changedInSubtree)
+                // If the single pass produced a different expression (by value or reference)
+                if (!singlePassResult.RewrittenExpression.Equals(currentExpression))
                 {
-                    changedLocallyThisIteration = true;
+                    changedInLastIteration = true;
+                    overallChanged = true; 
                 }
-                currentExpression = newExpression;
+                currentExpression = singlePassResult.RewrittenExpression; // Update for next iteration
                 iteration++;
-            } while (changedLocallyThisIteration && iteration < maxIterations);
+            } while (changedInLastIteration && iteration < maxInternalIterations);
             
-            return currentExpression;
+            return new RewriterResult(currentExpression, overallChanged);
         }
 
         /// <summary>
-        /// Recursively applies rules to an expression and its sub-expressions.
+        /// Recursively applies rules to an expression and its sub-expressions, performing a single pass.
         /// </summary>
         /// <param name="expression">The expression to apply rules to.</param>
         /// <param name="rules">The set of rules to apply.</param>
@@ -124,6 +151,7 @@ namespace Sym.Core
                 if (bindings.ContainsKey(wildPattern.Name))
                 {
                     // If this wildcard name is already bound, the current expression must match the existing binding.
+                    // Use InternalEquals for comparison of expressions within pattern matching.
                     return bindings[wildPattern.Name].InternalEquals(expression);
                 }
                 else
@@ -151,6 +179,7 @@ namespace Sym.Core
 
             if (expression is Atom atomExpression && pattern is Atom atomPattern)
             {
+                // For atoms, direct internal equals comparison is sufficient.
                 return atomExpression.InternalEquals(atomPattern);
             }
             else if (expression is Operation opExpression && pattern is Operation opPattern)
@@ -169,6 +198,7 @@ namespace Sym.Core
                 return true;
             }
 
+            // Fallback for types not explicitly handled (e.g., if a new IExpression type is added that is neither Atom nor Operation)
             return false;
         }
 
