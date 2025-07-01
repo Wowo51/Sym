@@ -1,5 +1,5 @@
 # Sym
-This library provides a framework for representing and manipulating mathematical expressions, performing calculus, and solving equations through a powerful pattern-matching and term-rewriting engine.</br>
+This library provides a symbolic computation framework for representing and manipulating mathematical expressions, performing calculus, and solving equations through a powerful pattern-matching and term-rewriting engine.</br>
 </br>
 Pure C#, no binaries. No dependencies except for Microsoft's unit testing.
 </br>
