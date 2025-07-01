@@ -1,6 +1,7 @@
 //Copyright Warren Harding 2025.
 using System.Collections.Immutable;
 using System;
+using Sym.Core.Rewriters;
 
 namespace Sym.Core
 {
