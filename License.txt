@@ -1,0 +1,13 @@
+TranscendAI.tech Non-Commercial License
+Version 1.0
+
+Use: You are granted the right to use, modify, and distribute the source code and any output from the source code for non-commercial purposes.
+
+Testing: You may test the source code and any output from the source code in for-profit environments without restrictions.
+
+Attribution: If you use the source code publicly or incorporate it into a public product, you must provide appropriate attribution to TranscendAI.tech.
+
+Commercial Use: Any commercial use of the source code requires obtaining a separate commercial license from TranscendAI.tech.
+
+Warranty & Liability:
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
