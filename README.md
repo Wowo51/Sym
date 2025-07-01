@@ -1,5 +1,5 @@
 # Sym
-A symbolic computation library that can manipulate algebraic equations. Sym supports vectors, matrixes, tensors, differentiation, integration, partial derivatives and vector calculus.</br>
+This library provides a framework for representing and manipulating mathematical expressions, performing calculus, and solving equations through a powerful pattern-matching and term-rewriting engine.</br>
 </br>
 Pure C#, no binaries. No dependencies except for Microsoft's unit testing.
 </br>
