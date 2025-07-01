@@ -13,6 +13,14 @@ namespace Sym.Operations
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Add"/> class with a variable number of arguments.
+        /// </summary>
+        /// <param name="arguments">The expressions to be added.</param>
+        public Add(params IExpression[] arguments) : base(ImmutableList.Create(arguments))
+        {
+        }
+
         public override Shape Shape
         {
             get
