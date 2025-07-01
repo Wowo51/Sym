@@ -13,6 +13,14 @@ namespace Sym.Operations
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Multiply"/> class with a variable number of arguments.
+        /// </summary>
+        /// <param name="arguments">The expressions to be multiplied.</param>
+        public Multiply(params IExpression[] arguments) : base(ImmutableList.Create(arguments))
+        {
+        }
+
         public override Shape Shape
         {
             get
