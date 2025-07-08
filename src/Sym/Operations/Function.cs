@@ -1,5 +1,6 @@
-//Copyright Warren Harding 2025.
+// Copyright Warren Harding 2025.
 using Sym.Core;
+using Sym.Atoms;
 using System.Collections.Immutable;
 using System.Linq;
 using System;
@@ -14,7 +15,7 @@ namespace Sym.Operations
         {
             Name = name;
         }
-        
+
         public override Shape Shape
         {
             get
@@ -41,6 +42,60 @@ namespace Sym.Operations
         {
             ImmutableList<IExpression> canonicalArgs = Arguments.Select(arg => arg.Canonicalize()).ToImmutableList();
 
+            // Attempt to numerically evaluate known functions if arguments are numbers.
+            IExpression? evaluatedResult = null;
+            if (canonicalArgs.All(arg => arg is Number))
+            {
+                try
+                {
+                    // Handle single-argument functions
+                    if (canonicalArgs.Count == 1)
+                    {
+                        double val = (double)((Number)canonicalArgs[0]).Value;
+                        double result;
+                        bool evaluated = true;
+                        switch (Name.ToLowerInvariant())
+                        {
+                            case "sin": result = Math.Sin(val); break;
+                            case "cos": result = Math.Cos(val); break;
+                            case "tan": result = Math.Tan(val); break;
+                            case "exp": result = Math.Exp(val); break;
+                            case "log": result = Math.Log(val); break; // Natural log
+                            default:
+                                evaluated = false;
+                                result = 0; // dummy
+                                break;
+                        }
+                        if (evaluated && !double.IsNaN(result) && !double.IsInfinity(result))
+                        {
+                            evaluatedResult = new Number((decimal)result);
+                        }
+                    }
+                    // Handle two-argument functions (e.g., Log(value, base))
+                    else if (canonicalArgs.Count == 2 && Name.ToLowerInvariant() == "log")
+                    {
+                        double val = (double)((Number)canonicalArgs[0]).Value;
+                        double baseVal = (double)((Number)canonicalArgs[1]).Value;
+                        double result = Math.Log(val, baseVal);
+                        if (!double.IsNaN(result) && !double.IsInfinity(result))
+                        {
+                            evaluatedResult = new Number((decimal)result);
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    // On any math or conversion error, evaluatedResult remains null,
+                    // and we fall through to symbolic representation.
+                }
+            }
+
+            if (evaluatedResult != null)
+            {
+                return evaluatedResult;
+            }
+
+            // If not evaluated, reconstruct the function if its arguments have changed during canonicalization.
             bool argumentsChanged = false;
             if (Arguments.Count != canonicalArgs.Count)
             {
@@ -50,8 +105,7 @@ namespace Sym.Operations
             {
                 for (int i = 0; i < Arguments.Count; i++)
                 {
-                    // If the reference has changed, then the argument list effectively changed.
-                    if (!ReferenceEquals(Arguments[i], canonicalArgs[i])) 
+                    if (!ReferenceEquals(Arguments[i], canonicalArgs[i]))
                     {
                         argumentsChanged = true;
                         break;
