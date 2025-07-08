@@ -1,386 +1,268 @@
-# Sym: A .NET Symbolic Mathematics Library - Code Guide
+# Sym Symbolic Manipulation Engine: A Developer's Guide
 
-Welcome to the code guide for **Sym**, a symbolic computation library written in C\#. This library provides a framework for representing and manipulating mathematical expressions, performing calculus, and solving equations through a powerful pattern-matching and term-rewriting engine.
+This guide provides a comprehensive overview of the **Sym** library, a powerful symbolic mathematics engine written in C\#, and its companion library, **SymIO**, which provides easy-to-use input/output capabilities. We will explore the core architecture, from the fundamental expression tree to the rule-based solver, and demonstrate how to use the high-level API to perform complex symbolic operations.
 
-This guide will walk you through the core architecture, key components, and provide examples of how to use the library for various mathematical tasks.
+## 1\. Introduction to the Sym Ecosystem
 
-## Table of Contents
+The Sym ecosystem is composed of two primary projects:
 
-1.  [Core Architecture: The Expression Tree](https://www.google.com/search?q=%231-core-architecture-the-expression-tree)
-2.  [The Building Blocks: Atoms](https://www.google.com/search?q=%232-the-building-blocks-atoms)
-3.  [Combining Expressions: Operations](https://www.google.com/search?q=%233-combining-expressions-operations)
-4.  [Tensor Concepts: Shape, Vector, and Matrix](https://www.google.com/search?q=%234-tensor-concepts-shape-vector-and-matrix)
-5.  [The Engine: Pattern Matching and Rewriting](https://www.google.com/search?q=%235-the-engine-pattern-matching-and-rewriting)
-6.  [The Solver Framework](https://www.google.com/search?q=%236-the-solver-framework)
-7.  [Putting It All Together: Usage Examples](https://www.google.com/search?q=%237-putting-it-all-together-usage-examples)
+  * **`Sym`**: The core library that defines all symbolic entities and logic. It contains the building blocks for expressions (like numbers, symbols, and operations), a powerful rule-based rewriting engine, and a flexible solver system designed around a strategy pattern. It has no knowledge of how expressions are represented as text; it works purely with the object model.
+  * **`SymIO`**: A user-facing library that acts as a bridge between human-readable strings and the `Sym` core. It includes a parser to convert C\#-like mathematical strings into `Sym` expression trees and a formatter to convert those trees back into clean, readable strings.
+
+Together, they provide a complete solution for parsing, solving, and formatting symbolic math problems.
 
 -----
 
-## 1\. Core Architecture: The Expression Tree
+## 2\. Core Concepts of the `Sym` Library
 
-At the heart of the `Sym` library is the concept of the **expression tree**. Every mathematical formula, no matter how complex, is represented as a tree structure. The foundation for this is the `IExpression` interface and its abstract base class `Expression`.
+The entire `Sym` engine is built around a central interface: `IExpression`. Every mathematical object, from a simple number to a complex equation, is a type of `IExpression`. This creates a unified, composable system.
 
-### `IExpression` and `Expression`
+### 2.1. Expressions: `Atom` and `Operation`
 
-  - **`IExpression`**: Defines the essential contract for all symbolic expressions. Key members include:
+`IExpression` has two abstract implementations, forming the basis of our expression tree:
 
-      - `Shape Shape { get; }`: Describes the tensor shape (scalar, vector, etc.).
-      - `IExpression Canonicalize()`: Returns the simplified, standard form of the expression. This is the most important method for ensuring consistency.
-      - `ToDisplayString()`: Provides a human-readable string representation.
-      - `Equals()` & `GetHashCode()`: Defines value equality based on the canonical form.
+  * **`Atom`**: Represents the "leaves" of the expression tree. These are indivisible objects.
 
-  - **`Expression`**: The abstract base class that implements `IExpression`. It provides a crucial, sealed implementation of `Equals()` and `GetHashCode()`. Two expressions are considered equal if and only if their **canonical forms** are equal.
+      * `Number`: Represents a numerical value, stored internally as a `System.Decimal`.
+      * `Symbol`: Represents a variable or constant, like 'x' or 'pi'. It has a `Name` and a `Shape`.
+      * `Wild`: A special atom used only for pattern matching in rules. It acts as a placeholder that can match any expression.
 
-<!-- end list -->
+  * **`Operation`**: Represents the "nodes" of the expression tree. These are objects that contain other `IExpression`s as arguments.
+
+      * **Arithmetic**: `Add`, `Subtract`, `Multiply`, `Divide`, `Power`.
+      * **Calculus**: `Derivative`, `Integral`, `Grad`, `Div`, `Curl`.
+      * **Structural**: `Function` (for generic functions like `sin` or `log`), `Vector`, `Matrix`.
+      * **Logical**: `Equality` (to represent equations like `lhs = rhs`).
+
+For example, the mathematical expression `2*x + 5` would be represented as an `Add` operation containing two arguments:
+
+1.  A `Multiply` operation with a `Number(2)` and a `Symbol("x")` as arguments.
+2.  A `Number(5)`.
+
+### 2.2. The Principle of Canonicalization
+
+One of the most important concepts in the `Sym` library is **canonicalization**. Every `IExpression` has a `Canonicalize()` method that returns a "standard" or "normal" form of that expression.
+
+**Why is this important?**
+Consider the expressions `x + 0` and `x`. Mathematically, they are identical. Likewise, `a + b` is the same as `b + a`. For a computer to recognize these equivalences, we need to reduce them to a single, consistent representation.
+
+The `Canonicalize()` method performs several key tasks:
+
+1.  **Simplification**: It performs basic, universally true simplifications.
+
+      * `x + 0` becomes `x`.
+      * `y * 1` becomes `y`.
+      * `z * 0` becomes `0`.
+      * `2 * 3` becomes `6`.
+
+2.  **Normalization**: It converts expressions into a standard structure.
+
+      * `Subtract(a, b)` becomes `Add(a, Multiply(-1, b))`.
+      * `Divide(a, b)` becomes `Multiply(a, Power(b, -1))`.
+      * This reduces the number of operation types the `Rewriter` needs to handle directly.
+
+3.  **Ordering**: For commutative operations like `Add` and `Multiply`, it sorts the arguments into a consistent order.
+
+      * `Add(c, b, a)` becomes `Add(a, b, c)`.
+
+4.  **Flattening**: It flattens nested operations of the same type.
+
+      * `Add(a, Add(b, c))` becomes `Add(a, b, c)`.
+
+Crucially, the `Equals()` and `GetHashCode()` methods on any `IExpression` are implemented to work on the *canonical form*. This means that `new Add(x, y)` will be considered equal to `new Add(y, x)` because they both canonicalize to the same sorted and flattened `Add` operation.
+
+### 2.3. The Rewriting System
+
+While canonicalization handles fundamental simplifications, more complex transformations require a rule-based rewriting system. This system is composed of `Rule` objects and a `Rewriter` that applies them.
+
+#### `Rule`
+
+A `Rule` defines a single transformation. It consists of three parts:
+
+  * **`Pattern`**: An `IExpression` that may contain `Wild` atoms. This is what the rule looks for.
+  * **`Replacement`**: An `IExpression` that defines the output. It can use the `Wild` atoms that were captured in the pattern.
+  * **`Condition` (Optional)**: A C\# function (`Func`) that receives the results of a successful match and returns `true` if the rule should be applied.
+
+**Example: The rule for `x / x = 1`**
 
 ```csharp
-// C:\Users\dual5\OneDrive\Desktop\Code2025\GithubRepos\Sym\src\Sym\Core\Expression.cs
-public abstract class Expression : IExpression
-{
-    // ...
-    public override sealed bool Equals(object? obj)
-    {
-        // ...
-        // For comparison, always canonicalize both expressions FIRST
-        IExpression thisCanonical = this.Canonicalize();
-        IExpression otherCanonical = otherExpression.Canonicalize();
-
-        // Now compare the canonical forms using InternalEquals
-        return thisCanonical.InternalEquals(otherCanonical);
-    }
-    // ...
-}
-```
-
-This design means that `new Add(x, y)` will correctly equal `new Add(y, x)` because they both simplify to the same canonical representation.
-
-### Atoms vs. Operations
-
-Every node in the expression tree is either an `Atom` (a leaf) or an `Operation` (an internal node).
-
-  - **`Atom`**: Represents indivisible elements. They have no arguments and are the leaves of the expression tree. Examples include numbers (`5`), symbols (`x`), and wildcards used for pattern matching (`_a`).
-  - **`Operation`**: Represents a function or operator applied to one or more other expressions (its `Arguments`). Examples include addition (`Add`), multiplication (`Multiply`), and differentiation (`Derivative`).
-
-*The expression `x + 2 * y` represented as a tree.*
-
------
-
-## 2\. The Building Blocks: Atoms
-
-Atoms are the fundamental, indivisible components of expressions.
-
-### `Number`
-
-Represents a numeric literal. Internally, it uses `System.Decimal` for high precision.
-
-  - **File**: `Atoms/Number.cs`
-  - **Usage**: `new Number(123.45m)`
-
-### `Symbol`
-
-Represents a variable, constant, or indeterminate. It has a `Name` (e.g., "x", "y", "pi") and a `Shape`.
-
-  - **File**: `Atoms/Symbol.cs`
-  - **Usage**: `new Symbol("x")` for a scalar, or `new Symbol("V", new Shape(ImmutableArray.Create(3)))` for a 3D vector symbol.
-
-### `Wild`
-
-A special type of atom used exclusively for pattern matching. It acts as a placeholder that can match any expression.
-
-  - **File**: `Atoms/Wild.cs`
-  - **Key Properties**:
-      - `Name`: A string identifier (e.g., "a", "f") used to retrieve the expression it matched.
-      - `Constraint`: An optional `WildConstraint` that restricts what the wild can match.
-  - **`WildConstraint` Enum**:
-      - `None`: Matches anything.
-      - `Scalar`: Matches only scalar expressions.
-      - `Constant`: Matches only `Number` atoms.
-  - **Usage**: `new Wild("f")` or `new Wild("c", WildConstraint.Constant)`
-
------
-
-## 3\. Combining Expressions: Operations
-
-Operations take one or more `IExpression` arguments and combine them. Their most important feature is the `Canonicalize()` method, which performs automatic simplification.
-
-### Commutative Operations: `Add` and `Multiply`
-
-`Add` and `Multiply` are special because the order of their arguments doesn't matter (e.g., $x+y = y+x$). The library enforces this by:
-
-1.  **Flattening**: `Add(Add(a, b), c)` becomes `Add(a, b, c)`.
-2.  **Constant Folding**: `Add(x, 2, 3)` becomes `Add(x, 5)`.
-3.  **Sorting**: The arguments are sorted into a canonical order. `Add(y, x)` becomes `Add(x, y)`.
-
-This ensures that any two expressions that are algebraically equivalent through commutation and association will have the exact same canonical representation.
-
-```csharp
-// C:\Users\dual5\OneDrive\Desktop\Code2025\GithubRepos\Sym\src\Sym\Operations\Add.cs
-public override IExpression Canonicalize()
-{
-    // ...
-    ImmutableList<IExpression> flattenedArgs = ExpressionHelpers.FlattenArguments<Add>(canonicalArgs);
-    // ... fold numeric sum ...
-    ImmutableList<IExpression> sortedArgs = ExpressionHelpers.SortArguments(nonNumericTermsBuilder.ToImmutable());
-    // ...
-    return new Add(sortedArgs);
-}
-```
-
-### Binary Operations: `Subtract`, `Divide`, `Power`
-
-For simplicity, binary operations are canonicalized into their more general forms:
-
-  - `Subtract(a, b)` becomes `Add(a, Multiply(-1, b))`
-  - `Divide(a, b)` becomes `Multiply(a, Power(b, -1))`
-
-This drastically reduces the number of rules needed in other parts of the system, as they only need to handle `Add` and `Multiply`.
-
-### Calculus and Function Operations
-
-  - **`Derivative(expr, var)`**: Represents $\\frac{d}{d\\text{var}}(\\text{expr})$.
-  - **`Integral(expr, var)`**: Represents $\\int \\text{expr} ,d\\text{var}$.
-  - **`Function(name, args)`**: A general-purpose operation for functions like `sin(x)` or `log(x, 2)`. It's created like `new Function("sin", ImmutableList.Create<IExpression>(x))`.
-
------
-
-## 4\. Tensor Concepts: `Shape`, `Vector`, and `Matrix`
-
-The library has first-class support for vectors and matrices, governed by the `Shape` class.
-
-### `Shape`
-
-A record that defines the dimensions of an expression.
-
-  - **File**: `Core/Shape.cs`
-  - **Key Static Instances**:
-      - `Shape.Scalar`: For single values.
-      - `Shape.Vector`: For 1D arrays, e.g., `new Shape(ImmutableArray.Create(3))` for a 3-vector.
-      - `Shape.Matrix`: For 2D arrays, e.g., `new Shape(ImmutableArray.Create(2, 3))` for a 2x3 matrix.
-  - The `Shape` class includes logic to determine compatibility for element-wise operations.
-
-### `Vector` and `Matrix` Operations
-
-  - **`Vector`**: An operation whose arguments are its scalar components. `new Vector(ImmutableList.Create(x, y, z))` represents the vector $(x, y, z)$.
-  - **`Matrix`**: An operation storing matrix elements in a flat list, with dimensions stored separately.
-  - **`DotProduct`**, **`MatrixMultiply`**: Specific operations for linear algebra. The `Multiply` operation's `Canonicalize` method will automatically promote a multiplication of two compatible vectors into a `DotProduct`.
-  - **`Grad`**, **`Div`**, **`Curl`**: Vector calculus operations that take a field and a vector variable as arguments. For example, `new Grad(f, V)` where `f` is a scalar function and `V` is `Vector(x,y,z)`.
-
------
-
-## 5\. The Engine: Pattern Matching and Rewriting
-
-The real power of `Sym` comes from its ability to transform expressions using a set of rules. This is a three-part system: `Rule`, `Rewriter`, and `MatchResult`.
-
-### `Rule`
-
-A `Rule` defines a single transformation.
-
-  - **File**: `Core/Rule.cs`
-  - **Components**:
-    1.  `Pattern`: An `IExpression` containing `Wild`s that describes what to look for.
-    2.  `Replacement`: An `IExpression` describing the output form. It can use `Wild`s from the pattern.
-    3.  `Condition` (optional): A lambda function that can check the matched expressions to decide if the rule should apply.
-
-Here's the rule for the derivative of a constant, $ \\frac{d}{dx}(c) = 0 $:
-
-```csharp
-// C:\Users\dual5\OneDrive\Desktop\Code2025\GithubRepos\Sym\src\Sym\Calculus\CalculusRules.cs
-
-// Define wildcards
-private static readonly Wild _wildX = new Wild("x");
-private static readonly Wild _wildC = new Wild("c", WildConstraint.Constant);
-
-// Define the rule
+// Wild _wildX = new Wild("x");
 new Rule(
-    // Pattern: Derivative of a constant 'c' w.r.t any 'x'
-    new Derivative(_wildC, _wildX),
-    // Replacement: The number 0
-    new Number(0m)
-),
+    // Pattern: X / X
+    new Divide(_wildX, _wildX), 
+    
+    // Replacement: 1
+    new Number(1m),
+    
+    // Condition: The rule only applies if the matched value for 'x' is not zero.
+    (bindings) => bindings.TryGetValue("x", out var x) && (x is not Number n || n.Value != 0m)
+);
 ```
 
-Here's a more complex rule with a condition: the power rule for integration, $\\int x^n ,dx = \\frac{x^{n+1}}{n+1}$, which is only valid if $n \\neq -1$.
+#### `Rewriter`
 
-```csharp
-// C:\Users\dual5\OneDrive\Desktop\Code2025\GithubRepos\Sym\src\Sym\Calculus\CalculusRules.cs
-new Rule(
-    // Pattern: Integral(x^n, x)
-    new Integral(new Power(_wildX, _wildN), _wildX),
-    // Replacement: x^(n+1) * (n+1)^-1
-    new Multiply(ImmutableList.Create<IExpression>(
-        new Power(_wildX, new Add(ImmutableList.Create<IExpression>(_wildN, new Number(1m)))),
-        new Power(new Add(ImmutableList.Create<IExpression>(_wildN, new Number(1m))), new Number(-1m))
-    )),
-    // Condition: n must not be -1
-    (bindings) => bindings.TryGetValue("n", out IExpression? matchedN) && matchedN is Number numN && numN.Value != -1m
-)
-```
+The static `Rewriter` class is the engine that applies these rules. Its core job is to traverse an expression tree and attempt to apply a list of rules.
 
-### `Rewriter`
+  * `TryMatch(expression, pattern)`: This method checks if an `expression` matches a given `pattern`. If it does, it returns a `MatchResult` containing the sub-expressions that were bound to the `Wild`s in the pattern.
+  * `Substitute(replacement, bindings)`: This takes a `replacement` pattern and a dictionary of `bindings` (from a `MatchResult`) and builds a new expression by swapping the `Wild`s with their bound values.
+  * `Rewrite(expression, rules)`: This method performs a single, top-down pass over the expression tree. It checks for a rule match at the current node. If found, it applies the rule and stops. If not, it recursively calls itself on the node's children.
+  * `RewriteFully(expression, rules)`: This method repeatedly calls `Rewrite` on an expression until no more changes can be made, ensuring that all possible rule applications have been performed.
 
-The `Rewriter` is a static class that applies rules to an expression.
+### 2.4. The Solver Framework
 
-  - **File**: `Core/Rewriter.cs`
-  - **Core Logic**:
-    1.  **`TryMatch(expression, pattern)`**: Attempts to match the `pattern` against the `expression`. If successful, it returns a `MatchResult` containing the `bindings` (a dictionary mapping `Wild` names to the expressions they matched).
-    2.  **`Substitute(replacement, bindings)`**: Takes the `replacement` part of a rule and the `bindings` from a successful match, and builds the new expression.
-    3.  **`RewriteSinglePass(expression, rules)`**: Traverses the expression tree once, attempting to apply the first matching rule at each node.
-    4.  **`RewriteFully(expression, rules)`**: Repeatedly calls `RewriteSinglePass` until no more changes can be made (a "fixed point" is reached).
+To provide a structured way to perform complex tasks like solving equations or simplifying expressions, `Sym` uses a strategy pattern.
+
+  * **`SymSolver`**: A high-level static class that acts as the main entry point for all solving operations. You don't call the `Rewriter` directly; you go through the `SymSolver`.
+
+  * **`ISolverStrategy`**: An interface defining a contract for a solving process. It has a single method: `Solve`.
+
+      * **`FullSimplificationStrategy`**: The simplest strategy. Its goal is to fully simplify an expression. It does this by repeatedly canonicalizing and applying a given set of rules until the expression stops changing.
+      * **`EquationSolverStrategy`**: A more complex strategy designed to solve an `Equality` for a specific variable. It uses a combination of full simplification and "isolation tactics"—applying inverse operations to both sides of the equation to isolate the target variable (e.g., if it sees `x + 5 = 10`, it will subtract `5` from both sides).
+
+  * **`SolveContext`**: This object holds all the configuration for a single call to the solver. It specifies which `Rules` to use, the `TargetVariable` to solve for (if any), a `MaxIterations` limit, and whether to enable tracing.
+
+  * **`SolveResult`**: This object encapsulates the result of a `Solve` operation. It tells you if the operation was a `Success`, what the final `ResultExpression` is, and provides a `Message`.
 
 -----
 
-## 6\. The Solver Framework
+## 3\. High-Level API: `SymIO`
 
-The solver framework provides a clean, high-level API for end-users. It orchestrates the rewriting engine to achieve a specific goal, like simplifying an expression or solving an equation.
+While the `Sym` library is powerful, creating expression trees manually in C\# can be verbose. The `SymIO` library provides a simple, string-based interface for common tasks.
 
-### `SymSolver`
+### `CSharpIO` Class
 
-The main static entry point for users.
+This is the main class you will interact with. It hides all the complexity of parsing and solving.
 
-  - **File**: `Core/SymSolver.cs`
-  - **Convenience Methods**:
-      - `SymSolver.Simplify(...)`
-      - `SymSolver.SolveEquation(...)`
-  - **Core Method**: `Solve(problem, strategy, context)` which delegates the work to a chosen strategy.
+**Usage:**
 
-### `ISolverStrategy`
+```csharp
+using SymIO;
 
-An interface that defines a particular method for solving a problem. This allows the system to be extended with new solving techniques.
+// Create an instance of the I/O handler
+CSharpIO sym = new CSharpIO();
 
-  - **File**: `Core/ISolverStrategy.cs`
-  - **Implementations**:
-      - **`FullSimplificationStrategy`**: The simplest strategy. It repeatedly applies rules using `Rewriter.Rewrite` until the expression is fully simplified.
-      - **`EquationSolverStrategy`**: A more complex strategy for solving equations. It first simplifies both sides of an `Equality` expression. Then, it uses **isolation tactics** to rearrange the equation and solve for a `TargetVariable`. For example, if it sees `x + 5 = 10`, it will subtract `5` from both sides.
+// Use its methods to perform operations
+string result = sym.Simplify("(x + x) * (y - y + 1)"); 
+// result will be "2 * x"
+```
 
-### `SolveContext` and `SolveResult`
+### Core Methods
 
-  - **`SolveContext`**: A class that holds all the information for a solving job: the rules to use, the target variable (for equation solving), max iterations, and tracing options.
-  - **`SolveResult`**: A class that encapsulates the outcome of a `Solve` call, including a success flag, the final expression, a message, and an optional trace of all intermediate steps.
+The `CSharpIO` class offers several convenient methods that handle parsing the input string, setting up the correct solver strategy and context, executing the solver, and formatting the result back into a clean string.
+
+#### `Simplify(string expression)`
+
+Applies the `FullSimplificationStrategy` using a combined list of all algebraic and calculus rules.
+
+```csharp
+string simplified = sym.Simplify("2 * (x + 0) - (x - x)");
+// simplified -> "2 * x"
+```
+
+#### `Differentiate(string expression, string variable)`
+
+Builds a `Derivative` expression and then simplifies it.
+
+```csharp
+string derivative = sym.Differentiate("x**3 + 2*x", "x");
+// derivative -> "3 * x ** 2 + 2" 
+```
+
+#### `Integrate(string expression, string variable)`
+
+Builds an `Integral` expression and then simplifies it.
+
+```csharp
+string integral = sym.Integrate("3*x**2 + cos(x)", "x");
+// integral -> "x ** 3 + sin(x)"
+```
+
+#### `Solve(string equation, string variable)`
+
+Parses an equation string, identifies the target variable, and uses the `EquationSolverStrategy` to find a solution.
+
+```csharp
+string solution = sym.Solve("2*x + 10 = 20", "x");
+// solution -> "x = 5"
+```
+
+#### Vector Calculus Methods
+
+The `Grad`, `Div`, and `Curl` methods work similarly, constructing the appropriate vector calculus operation and simplifying the result.
+
+```csharp
+// Gradient
+string grad = sym.Grad("x**2 * y", "Vector(x, y)");
+// grad -> "Vector(2 * x * y, x ** 2)"
+
+// Divergence
+string div = sym.Div("Vector(x**2, y**2)", "Vector(x, y)");
+// div -> "2 * x + 2 * y"
+
+// Curl (2D case for simplicity)
+string curl = sym.Curl("Vector(-y, x)", "Vector(x, y)");
+// curl -> "2" (Note: Simplified from Vector(0, 0, 2), depending on full 3D rules)
+```
 
 -----
 
-## 7\. Putting It All Together: Usage Examples
+## 4\. How It Works: A Complete Walkthrough
 
-Here’s how you would use the library to perform common tasks.
+Let's trace the execution of `sym.Solve("2 * x + 5 = 15", "x")`.
 
-### Example 1: Simplifying an Expression
+1.  **`SymIO.CSharpIO.Solve` is called.**
 
-Let's simplify the expression `(x + y) * (x - y)` using basic algebraic rules.
+      * The input strings `"2 * x + 5 = 15"` and `"x"` are received.
 
-```csharp
-using Sym.Core;
-using Sym.Core.Strategies;
-using Sym.Atoms;
-using Sym.Operations;
-using System.Collections.Immutable;
+2.  **Parsing (`ExpressionParser`)**
 
-// 1. Define symbols
-var x = new Symbol("x");
-var y = new Symbol("y");
+      * The `Tokenizer` splits the input string into a stream of tokens: `NUMBER(2)`, `STAR`, `SYMBOL(x)`, `PLUS`, `NUMBER(5)`, `EQUALS`, `NUMBER(15)`.
+      * The `ExpressionParser` consumes these tokens using recursive descent. It recognizes the `EQUALS` token and creates an `Equality` operation.
+      * The left-hand side is parsed into `Add(Multiply(Number(2), Symbol("x")), Number(5))`.
+      * The right-hand side is parsed into `Number(15)`.
+      * A `Symbol("x")` is created for the target variable.
+      * The final parsed object is `problem = Equality(lhs, rhs)`.
 
-// 2. Define rules (e.g., a rule for distribution)
-// Rule: a * (b + c) -> a*b + a*c
-var a = new Wild("a");
-var b = new Wild("b");
-var c = new Wild("c");
-var distributionRule = new Rule(
-    new Multiply(a, new Add(b, c)),
-    new Add(new Multiply(a, b), new Multiply(a, c))
-);
-var rules = ImmutableList.Create(distributionRule);
+3.  **Solver Setup (`SymSolver.SolveEquation`)**
 
-// 3. Create the expression
-// Note: Subtract and Add/Multiply canonicalization handles a lot automatically
-// (x + y) * (x - y) -> (x + y) * (x + -1*y)
-var expr = new Multiply(new Add(x, y), new Subtract(x, y));
+      * An `EquationSolverStrategy` is instantiated.
+      * A `SolveContext` is created, containing the target `Symbol("x")` and the complete list of algebraic and calculus rules.
 
-// 4. Use the solver to simplify
-var context = new SolveContext(rules: rules, maxIterations: 10);
-var strategy = new FullSimplificationStrategy();
-var result = SymSolver.Solve(expr, strategy, context);
+4.  **Execution (`EquationSolverStrategy.Solve`)**
 
-// The canonicalization of Add and Multiply will automatically group and cancel terms.
-// The final result should be Power(x, 2) + -1 * Power(y, 2)
-Console.WriteLine(result.ResultExpression.ToDisplayString());
-// Expected output might be something like: ((x**2) + (-1 * (y**2)))
-```
+      * The strategy receives the `Equality` expression and the context.
+      * It enters a loop, up to `MaxIterations`.
+      * **Iteration 1:**
+          * **Simplification:** The strategy first calls `Rewriter.RewriteFully` on `2*x + 5 = 15`. No standard simplification rules apply, so the expression remains unchanged.
+          * **Goal Check:** The goal `x = solution` is not met.
+          * **Isolation:** The strategy identifies that `x` is on the left side. It examines the outermost operation on that side: `Add`.
+          * It sees `(2*x) + 5`. To isolate the term with `x`, it needs to remove the `+ 5`. It does this by creating a new equation where `5` is subtracted from both sides.
+          * New LHS: `2*x`.
+          * New RHS: `15 - 5`.
+          * The new equation is `Equality(Multiply(Number(2), Symbol("x")), Subtract(Number(15), Number(5)))`.
+          * This new equation is immediately canonicalized: `Subtract(15, 5)` becomes `Number(10)`.
+          * The result of the first isolation step is `Equality(Multiply(Number(2), Symbol("x")), Number(10))`, which we can write as `2*x = 10`.
+      * **Iteration 2:**
+          * **Simplification:** No rules apply to `2*x = 10`.
+          * **Goal Check:** The goal is not met.
+          * **Isolation:** The strategy sees `2*x = 10`. The outermost operation on the left is `Multiply`.
+          * To isolate `x`, it must divide both sides by `2`.
+          * New LHS: `x`.
+          * New RHS: `10 / 2`.
+          * The new equation is `Equality(Symbol("x"), Divide(Number(10), Number(2)))`.
+          * This is canonicalized: `Divide(10, 2)` becomes `Number(5)`.
+          * The result is the equation `Equality(Symbol("x"), Number(5))`, or `x = 5`.
+      * **Iteration 3:**
+          * **Simplification:** No rules apply.
+          * **Goal Check:** The strategy calls `CheckGoal`. It sees that the left side is the `targetVariable` (`x`) and the right side (`5`) does not contain the target variable. The check returns `true`.
+          * The strategy packages `x = 5` into a `SolveResult.Success` and returns.
 
-*Note: Full algebraic expansion would require more rules, but the built-in canonicalization of `Add` and `Multiply` does most of the heavy lifting like `x*y - y*x = 0`.*
+5.  **Formatting (`ParenthesisEliminationRules.Format`)**
 
-### Example 2: Taking a Derivative
+      * The `CSharpIO` class receives the successful `SolveResult`.
+      * It passes the `ResultExpression` (`Equality(Symbol("x"), Number(5))`) to the `Format` method.
+      * The formatter traverses the expression, building the string "x = 5" without any unnecessary parentheses.
 
-Let's find the derivative of $x^2 + \\sin(x)$ with respect to $x$.
+6.  **Return Value**
 
-```csharp
-using Sym.Core;
-using Sym.Calculus; // Where the differentiation rules live
-using Sym.Atoms;
-using Sym.Operations;
-
-// 1. Define symbols and expression
-var x = new Symbol("x");
-var expr = new Add(
-    new Power(x, new Number(2)),
-    new Function("sin", ImmutableList.Create<IExpression>(x))
-);
-
-// 2. Create the Derivative operation
-var derivative = new Derivative(expr, x);
-Console.WriteLine($"Original: {derivative.ToDisplayString()}");
-
-// 3. Use the Simplify convenience method with calculus rules
-var result = SymSolver.Simplify(
-    derivative,
-    CalculusRules.DifferentiationRules,
-    maxIterations: 20
-);
-
-// 4. Print the result
-if (result.IsSuccess)
-{
-    Console.WriteLine($"Result: {result.ResultExpression.ToDisplayString()}");
-    // Expected output will be the canonical form of:
-    // (2 * x) + cos(x)
-}
-```
-
-### Example 3: Solving an Equation
-
-Let's solve the equation $2x - 4 = 6$ for $x$.
-
-```csharp
-using Sym.Core;
-using Sym.Core.Strategies;
-using Sym.Atoms;
-using Sym.Operations;
-using System.Collections.Immutable;
-
-// 1. Define symbols and the equation
-var x = new Symbol("x");
-var two = new Number(2);
-var four = new Number(4);
-var six = new Number(6);
-
-// An equation is an Equality operation
-var equation = new Equality(
-    new Subtract(new Multiply(two, x), four),
-    six
-);
-
-// 2. Use the SolveEquation convenience method.
-// No extra rules are needed; the EquationSolverStrategy has built-in
-// logic for algebraic isolation.
-var result = SymSolver.SolveEquation(
-    equation,
-    targetVariable: x,
-    rules: ImmutableList<Rule>.Empty // No custom rules needed for this
-);
-
-// 3. Print the result
-if (result.IsSuccess)
-{
-    // The result will be an Equality expression in the form 'x = ...'
-    Console.WriteLine($"Solved: {result.ResultExpression.ToDisplayString()}");
-    // Expected Output: (x = 5)
-}
-```
+      * The final formatted string `"x = 5"` is returned to the user.
