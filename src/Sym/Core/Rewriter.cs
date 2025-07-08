@@ -116,7 +116,7 @@ namespace Sym.Core.Rewriters
                 {
                     ImmutableList<IExpression> updatedArgs = newArgumentsArray.ToImmutableList();
                     // Reconstruct the operation using the WithArguments abstract method
-                    return (((Operation)operation).WithArguments(updatedArgs), true);
+                    return (((Operation)operation).WithArguments(updatedArgs).Canonicalize(), true);
                 }
             }
             // If no rule applied and no arguments changed, return the original expression
@@ -237,7 +237,7 @@ namespace Sym.Core.Rewriters
                 // Call the virtual method WithArguments on the base operation class
                 return operation.WithArguments(newArgs);
             }
-            return replacementExpression; // Should not happen for valid IExpression types
+            return replacementExpression.Canonicalize(); // Should not happen for valid IExpression types
         }
     }
 }
