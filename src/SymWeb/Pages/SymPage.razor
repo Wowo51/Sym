@@ -1,0 +1,155 @@
+﻿@page "/sym"
+@using SymIO
+
+<div class="sym-container">
+    <div class="toolbar">
+        <button class="toolbar-button" @onclick="HandleSimplify">Simplify</button>
+        <button class="toolbar-button" @onclick="HandleSolve">Solve</button>
+
+        <select id="simplify-examples" class="toolbar-button" @onchange="OnExampleSelected">
+            <option value="">Simplify examples...</option>
+            @foreach (var example in simplifyExamples)
+            {
+                <option value="@example.Value">@example.Key</option>
+            }
+        </select>
+
+        <select id="solve-examples" class="toolbar-button" @onchange="OnExampleSelected">
+            <option value="">Solve examples...</option>
+            @foreach (var example in solveExamples)
+            {
+                <option value="@example.Value">@example.Key</option>
+            }
+        </select>
+
+        <a href="/help" class="toolbar-button help-button">Help</a>
+
+    </div>
+
+    <div class="panes-container">
+        <div class="input-pane">
+            <h2>Input</h2>
+            <textarea class="text-area" @bind="Input" @bind:event="oninput" placeholder="Enter a C# math expression or select an example. For Solve, use format: equation, variable"></textarea>
+        </div>
+        <div class="output-pane">
+            <h2>Output</h2>
+            <textarea class="text-area" readonly>@Output</textarea>
+        </div>
+    </div>
+
+    <div class="raven-info">
+        <p>Built by Raven. Raven is an agentic AI code generation system.<br /></p>
+        <p>10x coder = 1/10 cost.<br /></p>
+        <p>Get an estimate. Raven's developer: <a href="https://TranscendAI.tech">TranscendAI.tech</a><br /></p>
+    </div>
+
+    <footer class="sym-footer">
+        <p>&copy; <a href="https://SymbolicComputation.com">SymbolicComputation.com 2025</a></p>
+    </footer>
+</div>
+
+@code {
+    private readonly CSharpIO csharpIO = new();
+    private string? Input { get; set; } = string.Empty;
+    private string? Output { get; set; }
+
+    private readonly Dictionary<string, string> simplifyExamples = new()
+    {
+        { "Evaluate Numerical Expression", "(2 + 3) * 4" },
+        { "Combine Like Terms", "x + x" },
+        { "Multiplication by Zero", "y * 0" },
+        { "Identity Multiplication", "(x + y) * 1" },
+        { "Reciprocal of Reciprocal", "1 / (1 / x)" },
+        { "Power of a Product", "(x*y)**n" },
+        { "Differentiate Expression", "Derivative(x * y + y * z, x)" },
+        { "Integrate Constant", "Integral(5, x)" },
+        { "Vector Gradient", "Grad(5, Vector(x,y))" },
+        { "Vector Curl", "Curl(Vector(0, 0, 0), Vector(x,y,z))" }
+    };
+
+    private readonly Dictionary<string, string> solveExamples = new()
+    {
+        { "Linear Equation", "2 * x + 5 = 15, x" },
+        { "Literal Equation", "x + 2 * y = 10, x" }
+    };
+
+    private void OnExampleSelected(ChangeEventArgs e)
+    {
+        var selectedValue = e.Value?.ToString();
+        if (!string.IsNullOrWhiteSpace(selectedValue))
+        {
+            Input = selectedValue;
+            Output = string.Empty; // Clear output
+        }
+    }
+
+    private void HandleSimplify()
+    {
+        if (string.IsNullOrWhiteSpace(Input))
+        {
+            Output = "Please enter an expression to simplify.";
+            return;
+        }
+
+        try
+        {
+            Output = csharpIO.Simplify(Input);
+        }
+        catch (Exception ex)
+        {
+            Output = $"Error during simplification: {ex.Message}";
+        }
+    }
+
+    private void HandleSolve()
+    {
+        if (string.IsNullOrWhiteSpace(Input))
+        {
+            Output = "Input required. Please use the format: equation, variable";
+            return;
+        }
+
+        var lastCommaIndex = Input.LastIndexOf(',');
+        if (lastCommaIndex == -1)
+        {
+            Output = "Error: For solving, please provide the equation and the variable separated by a comma. Example: 2*x + 10 = 20, x";
+            return;
+        }
+
+        string equation = Input.Substring(0, lastCommaIndex).Trim();
+        string variable = Input.Substring(lastCommaIndex + 1).Trim();
+
+        if (string.IsNullOrWhiteSpace(equation) || string.IsNullOrWhiteSpace(variable))
+        {
+            Output = "Error: Invalid format. Ensure both equation and variable are provided. Example: 2*x + 10 = 20, x";
+            return;
+        }
+
+        try
+        {
+            Output = csharpIO.Solve(equation, variable);
+        }
+        catch (Exception ex)
+        {
+            Output = $"Error during solving: {ex.Message}";
+        }
+    }
+}
+
+<style>
+    .toolbar-spacer {
+        margin-left: auto;
+    }
+
+    .help-button {
+        background-color: #5A67D8; /* A distinct purple-blue color */
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .help-button:hover {
+            background-color: #434190;
+        }
+</style>
