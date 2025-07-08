@@ -1,0 +1,197 @@
+﻿@page "/help"
+
+<div class="container">
+    <header>SymPage Help</header>
+
+    <div class="article-name">How to Use SymPage</div>
+    <article>
+        <p>
+            Welcome to the help section for the <strong>SymPage Symbolic Calculator</strong>. This page allows you to perform two primary operations: simplifying complex mathematical expressions and solving equations.
+        </p>
+        <p>
+            The interface is composed of a toolbar and two text panes:
+        </p>
+        <ul>
+            <li><strong>Input Pane:</strong> This is where you type the expression you want to work with. You can also load pre-made examples using the dropdown menus in the toolbar.</li>
+            <li><strong>Output Pane:</strong> This read-only pane displays the result of your calculation after you click an operation button.</li>
+        </ul>
+        <p>
+            The toolbar contains the main controls:
+        </p>
+        <ul>
+            <li><strong style="vertical-align: middle;">Simplify:</strong> The main workhorse. It evaluates and simplifies the expression in the Input pane. This is also used to perform calculus operations.</li>
+            <li><strong style="vertical-align: middle;">Solve:</strong> Solves an equation for a specific variable.</li>
+            <li><strong style="vertical-align: middle;">Examples Dropdowns:</strong> Use these to select a sample expression. The selected example will automatically appear in the Input pane, ready for you to use.</li>
+        </ul>
+    </article>
+
+    <hr />
+
+    <div class="article-name">Simplify Operation</div>
+    <article>
+        <p>
+            The <strong>Simplify</strong> button takes the expression from the Input pane and applies a comprehensive set of algebraic and calculus rules to reduce it to its simplest form.
+        </p>
+
+        <h3>Algebraic Simplification</h3>
+        <p>This includes combining like terms, evaluating numerical expressions, and applying identity rules.</p>
+        <p><strong>Example:</strong></p>
+        <pre><code>(x + y) * 1</code></pre>
+        <p>Clicking <strong>Simplify</strong> will produce:</p>
+        <pre><code>x + y</code></pre>
+
+        <hr class="inner-hr" />
+
+        <h3>Calculus & Vector Operations</h3>
+        <p>
+            To perform calculus or vector operations like differentiation, integration, or gradient, you must write them using function syntax. After writing the function call in the Input pane, click the <strong>Simplify</strong> button to get the result.
+        </p>
+        <p><strong>Example (Differentiation):</strong></p>
+        <p>To find the derivative of <code>x**2</code>, you would enter the following and click <strong>Simplify</strong>:</p>
+        <pre><code>Derivative(x**2, x)</code></pre>
+        <p><strong>Result:</strong></p>
+        <pre><code>2 * x</code></pre>
+
+        <p><strong>Example (Gradient):</strong></p>
+        <p>To find the gradient of the scalar field <code>x*y</code>, you would enter:</p>
+        <pre><code>Grad(x*y, Vector(x, y))</code></pre>
+        <p><strong>Result:</strong></p>
+        <pre><code>Vector(y, x)</code></pre>
+    </article>
+
+    <hr />
+
+    <div class="article-name">Solve Operation</div>
+    <article>
+        <p>
+            The <strong>Solve</strong> button is used to isolate a variable within an equation.
+        </p>
+        <p>
+            The input must be a <strong>single line</strong> containing the equation, followed by a comma, and then the variable you wish to solve for.
+        </p>
+        <p><strong>Required Format:</strong> <code>equation, variable</code></p>
+        <p><strong>Example:</strong></p>
+        <p>To solve the equation <code>a*x + b = c</code> for the variable <code>x</code>, you would enter:</p>
+        <pre><code>a*x + b = c, x</code></pre>
+        <p>Clicking <strong>Solve</strong> will produce:</p>
+        <pre><code>x = (c - b) / a</code></pre>
+    </article>
+
+    <hr />
+
+    <div class="article-name">Syntax and Functions</div>
+    <article>
+        <h3>Operators</h3>
+        <p>Sym uses the following operators, listed in order of precedence (lowest to highest):</p>
+        <table class="help-table">
+            <thead>
+                <tr>
+                    <th>Operator</th>
+                    <th>Description</th>
+                    <th>Example</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>=</code></td>
+                    <td>Equality (for defining equations)</td>
+                    <td><code>2 * x = 10</code></td>
+                </tr>
+                <tr>
+                    <td><code>+</code></td>
+                    <td>Addition</td>
+                    <td><code>x + y</code></td>
+                </tr>
+                <tr>
+                    <td><code>-</code></td>
+                    <td>Subtraction / Unary Minus</td>
+                    <td><code>5 - z</code> or <code>-x</code></td>
+                </tr>
+                <tr>
+                    <td><code>*</code></td>
+                    <td>Multiplication</td>
+                    <td><code>3 * (x + 1)</code></td>
+                </tr>
+                <tr>
+                    <td><code>/</code></td>
+                    <td>Division</td>
+                    <td><code>y / 2</code></td>
+                </tr>
+                <tr>
+                    <td><code>**</code></td>
+                    <td>Power / Exponentiation</td>
+                    <td><code>x**2</code></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Supported Functions</h3>
+        <p>The following functions can be used in your expressions:</p>
+        <ul>
+            <li><strong>Calculus:</strong> <code>Derivative(expr, var)</code>, <code>Integral(expr, var)</code></li>
+            <li><strong>Vector Calculus:</strong> <code>Grad(scalar_expr, vec_var)</code>, <code>Div(vec_expr, vec_var)</code>, <code>Curl(vec_expr, vec_var)</code></li>
+            <li><strong>Data Structures:</strong> <code>Vector(c1, c2, ...)</code></li>
+            <li><strong>Standard Math:</strong> <code>sin(x)</code>, <code>cos(x)</code>, <code>tan(x)</code>, <code>exp(x)</code>, <code>log(x)</code>, <code>sqrt(x)</code></li>
+        </ul>
+    </article>
+
+    <footer class="sym-footer">
+        <p>&copy; <a href="https://SymbolicComputation.com">SymbolicComputation.com 2025</a></p>
+    </footer>
+
+</div>
+
+<style>
+    .help-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+
+        .help-table th, .help-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .help-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        .help-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .help-table code {
+            background-color: #eee;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+    pre {
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        padding: 12px;
+        border-radius: 5px;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        font-family: monospace;
+        font-size: 14px;
+    }
+
+        pre code {
+            background-color: transparent;
+            padding: 0;
+        }
+
+    hr.inner-hr {
+        border: 0;
+        height: 1px;
+        background-color: #e0e0e0;
+        margin: 30px 0;
+    }
+</style>
