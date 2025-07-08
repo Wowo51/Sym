@@ -1,0 +1,39 @@
+﻿@media (max-width: 768px) {
+    header {
+        font-size: 36px;
+    }
+
+    .article-name {
+        font-size: 20px;
+    }
+
+    nav .nav-links {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    nav a {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    .panes-container {
+        flex-direction: column; /* Stack panes vertically on small screens */
+    }
+
+    .input-pane,
+    .output-pane {
+        min-height: 200px; /* Give a minimum height to panes when stacked */
+    }
+
+    .toolbar {
+        justify-content: center; /* Center buttons when they wrap */
+    }
+}
+
+@media (max-width: 480px) {
+    .toolbar-button {
+        width: 100%; /* Make buttons full width on very small screens */
+    }
+}
