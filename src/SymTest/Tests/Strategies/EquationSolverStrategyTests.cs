@@ -12,7 +12,7 @@ namespace Sym.Test.Strategies
     [TestClass]
     public class EquationSolverStrategyTests
     {
-        private static ImmutableList<Rule> generalAndEquationSolvingRules;
+        private static ImmutableList<Rule>? generalAndEquationSolvingRules;
 
         [ClassInitialize]
         public static void Initialize(TestContext context)
