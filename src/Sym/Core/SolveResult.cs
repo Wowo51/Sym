@@ -1,6 +1,7 @@
 //Copyright Warren Harding 2025.
-using System.Collections.Immutable;
 using Sym.Core;
+using Sym.Formatting;
+using System.Collections.Immutable;
 
 namespace Sym.Core
 {
