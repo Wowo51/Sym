@@ -1,0 +1,337 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333333;
+}
+
+.container {
+    max-width: 1250px;
+    width: 100%;
+    margin: 0 auto;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding-bottom: 0px;
+}
+
+header {
+    text-align: center;
+    font-size: 48px;
+    padding: 20px 0;
+}
+
+.main-image img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+.article-name {
+    font-size: 24px;
+    margin: 20px 16px 10px 16px;
+    color: #333333;
+}
+
+article {
+    margin: 0 16px 20px 16px;
+    font-size: 16px;
+    line-height: 1.6;
+    text-align: justify;
+}
+
+    /* Links within articles */
+    article a {
+        color: #007bff;
+        text-decoration: underline;
+    }
+
+        article a:hover {
+            color: #0056b3;
+        }
+
+nav {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 10px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+    nav .nav-container {
+        max-width: 1250px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    nav .nav-links {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+    }
+
+    nav a {
+        font-size: 18px;
+        font-weight: bold;
+        text-decoration: none;
+        color: #333333;
+        padding: 8px 12px;
+        transition: background-color 0.3s, color 0.3s;
+        border-radius: 4px;
+    }
+
+        nav a:hover {
+            background-color: #e0e0e0;
+            color: #000000;
+        }
+
+    nav .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    nav .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #ffffff;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+    }
+
+        nav .dropdown-content a {
+            color: #333333;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+            nav .dropdown-content a:hover {
+                background-color: #f1f1f1;
+            }
+
+    nav .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+footer {
+    text-align: center;
+    margin: 16px;
+    font-size: 14px;
+    color: #555555;
+    border-top: 1px solid #e0e0e0;
+    padding-top: 10px;
+}
+
+/* Existing Blazor default styles below */
+.valid.modified:not([type="checkbox"]) {
+    outline: 1px solid #26b050;
+}
+
+.invalid {
+    outline: 1px solid red;
+}
+
+.validation-message {
+    color: red;
+}
+
+#blazor-error-ui {
+    color-scheme: light only;
+    background: lightyellow;
+    bottom: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+    #blazor-error-ui .dismiss {
+        cursor: pointer;
+        position: absolute;
+        right: 0.75rem;
+        top: 0.5rem;
+    }
+
+.blazor-error-boundary {
+    background: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTYiIGhlaWdodD0iNDkiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxsaW5rIiBvdmVyZmxvdz0iaGlkZGVuIj48ZGVmcz48Y2xpcFBhdGggaWQ9ImNsaXAwIj48cmVjdCB4PSIyMzUiIHk9IjUxIiB3aWR0aD0iNTYiIGhlaWdodD0iNDkiLz48L2NsaXBQYXRoPjwvZGVmcz48ZyBjbGlwLXBhNGo9InVybCgjY2xpcDApIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMjM1IC01MSkiPjxwYXRoIGQ9Ik0yNjMuNTA2IDUxQzI2NC43MTcgNTEgMjY1LjgxMyA1MS40ODM3IDI2Ni42MDYgNTIuMjY1OEwyNjcuMDUyIDUyLjc5ODcgMjY3LjUzOSA1My42MjgzIDI5MC4xODUgOTIuMTgzMSAyOTAuNTQ1IDkyLjc5NSAyOTAuNjU2IDkyLjk5NkMyOTAuODc3IDkzLjUxMyAyOTEgOTQuMDgxNSAyOTEgOTQuNjc4MiAyOTEgOTcuMDY1MSAyODkuMDM4IDk5IDI4Ni42MTcgOTlMMjQwLjM4MyA5OUMyMzcuOTYzIDk5IDIzNiA5Ny4wNjUxIDIzNiA5NC42NzgyIDIzNiA5NC4zNzk5IDIzNi4wMzEgOTQuMDg4NiAyMzYuMDg5IDkzLjgwNzJMMjM2LjMzOCA5My4wMTYyIDIzNi44NTggOTIuMTMxNCAyNTkuNDczIDUzLjYyOTQgMjU5Ljk2MSA1Mi43OTg1IDI2MC40MDcgNTIuMjY1OEMyNjEuMiA1MS40ODM3IDI2Mi4yOTYgNTEgMjYzLjUwNiA1MVpNMjYzLjU4NiA2Ni4wMTgzQzI2MC43MzcgNjYuMDE4MyAyNTkuMzEzIDY3LjEyNDUgMjU5LjMxMyA2OS4zMzcgMjU5LjMxMyA2OS42MTAyIDI1OS4zMzIgNjkuODYwOCAyNTkuMzcxIDcwLjA4ODdMMjYxLjc5NSA4NC4wMTYxIDI2NS4zOCA4NC4wMTYxIDI2Ny44MjEgNjkuNzQ3NUMyNjcuODYgNjkuNzMwOSAyNjcuODc5IDY5LjU4NzcgMjY3Ljg3OSA2OS4zMTc5IDI2Ny44NzkgNjcuMTE4MiAyNjYuNDQ4IDY2LjAxODMgMjYzLjU4NiA2Ni4wMTgzWk0yNjMuNTc2IDg2LjA1NDdDMjYxLjA0OSA4Ni4wNTQ3IDI1OS43ODYgODcuMzAwNSAyNTkuNzg2IDg5Ljc5MjEgMjU5Ljc4NiA5Mi4yODM3IDI2MS4wNDkgOTMuNTI5NSAyNjMuNTc2IDkzLjUyOTUgMjY2LjExNiA5My41Mjk1IDI2Ny4zODcgOTIuMjgzNyAyNjcuMzg3IDg5Ljc5MjEgMjY3LjM4NyA4Ny4zMDM1IDI2Ni4xMTYgODYuMDU0NyAyNjMuNTc2IDg2LjA1NDdaIiBmaWxsPSIjRkZFNTAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiLz48L2c+PC9zdmc+) no-repeat 1rem/1.8rem, #b32121;
+    padding: 1rem 1rem 1rem 3.7rem;
+    color: white;
+}
+
+    .blazor-error-boundary::after {
+        content: "An error has occurred.";
+    }
+
+.loading-progress {
+    position: relative;
+    display: block;
+    width: 8rem;
+    height: 8rem;
+    margin: 20vh auto 1rem auto;
+}
+
+    .loading-progress circle {
+        fill: none;
+        stroke: #e0e0e0;
+        stroke-width: 0.6rem;
+        transform-origin: 50% 50%;
+        transform: rotate(-90deg);
+    }
+
+        .loading-progress circle:last-child {
+            stroke: #1b6ec2;
+            stroke-dasharray: calc(3.141 * var(--blazor-load-percentage, 0%) * 0.8), 500%;
+            transition: stroke-dasharray 0.05s ease-in-out;
+        }
+
+.loading-progress-text {
+    position: absolute;
+    text-align: center;
+    font-weight: bold;
+    inset: calc(20vh + 3.25rem) 0 auto 0.2rem;
+}
+
+    .loading-progress-text:after {
+        content: var(--blazor-load-percentage-text, "Loading");
+    }
+
+code {
+    color: #c02d76;
+}
+
+.form-floating > .form-control-plaintext::placeholder,
+.form-floating > .form-control::placeholder {
+    color: var(--bs-secondary-color);
+    text-align: end;
+}
+
+.form-floating > .form-control-plaintext:focus::placeholder,
+.form-floating > .form-control:focus::placeholder {
+    text-align: start;
+}
+
+/* Sym Page Specific Styles */
+.sym-container {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh); /* Adjust based on header/footer height */
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.toolbar {
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    background-color: #e9e9e9;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+}
+
+.toolbar-button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.2s ease-in-out;
+}
+
+    .toolbar-button:hover {
+        background-color: #0056b3;
+    }
+
+.panes-container {
+    display: flex;
+    flex-grow: 1; /* Allows panes to take up remaining space */
+    gap: 10px;
+}
+
+.input-pane,
+.output-pane {
+    flex: 1; /* Each pane takes equal width */
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+    .input-pane h2,
+    .output-pane h2 {
+        margin-top: 0;
+        margin-bottom: 10px;
+        color: #333;
+        font-size: 20px;
+    }
+
+.text-area {
+    width: 100%;
+    flex-grow: 1; /* Allows text areas to fill available space */
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    padding: 10px;
+    font-family: monospace;
+    font-size: 14px;
+    resize: none; /* Disable manual resizing */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+.left-justified {
+    text-align: left;
+}
+
+.raven-info {
+    text-align: left; /* Ensure it's left-aligned */
+    padding: 5px 0; /* Add a little padding if needed */
+    margin-top: 10px; /* Adjust space above this section */
+    margin-bottom: 0px; /* Crucial: Remove bottom margin to reduce space before footer */
+}
+
+    .raven-info p {
+        margin: 0; /* Remove default top/bottom margins from paragraphs inside this div */
+        line-height: 1.4; /* Adjust line height for better readability if margins are removed */
+        margin-left: 15px; /* Indent slightly as before */
+    }
+
+    .raven-info a {
+        color: #007bff; /* Style for the link */
+        text-decoration: none;
+    }
+
+        .raven-info a:hover {
+            text-decoration: underline;
+        }
+
+/* Specific Footer for Sym page */
+.sym-footer {
+    text-align: center;
+    margin-top: 0; /* Crucial: Remove top margin to reduce space after info section */
+    padding: 5px 0;
+    background-color: #f0f0f0;
+    border-top: 1px solid #ddd;
+    font-size: 0.9em;
+    color: #666;
+    border-radius: 0px;
+}
+
+    .sym-footer p {
+        margin: 0; /* Remove default top/bottom margins from paragraphs in footer */
+        margin-left: 15px; /* Indent slightly as before */
+    }
