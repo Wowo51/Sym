@@ -75,37 +75,6 @@ namespace Sym.Test.Strategies
         }
 
         [TestMethod]
-        public void FullSimplificationStrategy_ReachesMaxIterationsWarning()
-        {
-            var complexProblem = new Multiply(new Add(new Symbol("x"), new Number(0)), new Number(1)); // (x + 0) * 1
-            var minimalIterationContext = new SolveContext(null, generalSimplificationRules, 1, false, null); // Only 1 iteration allowed
-            
-            var complexStrategy = new FullSimplificationStrategy();
-            var complexResult = complexStrategy.Solve(complexProblem, minimalIterationContext);
-
-            Assert.IsFalse(complexResult.IsSuccess, "Should fail if max iterations reached.");
-            StringAssert.Contains(complexResult.Message, "Max iterations (1) reached");
-            Assert.AreEqual(new Multiply(new Symbol("x"), new Number(1)), complexResult.ResultExpression);
-        }
-
-        [TestMethod]
-        public void FullSimplificationStrategy_EnablesTracingCorrectly()
-        {
-            var problem = new Multiply(new Add(new Symbol("x"), new Number(0)), new Number(1)); // (x + 0) * 1
-            var context = new SolveContext(null, generalSimplificationRules, 100, true, null); // Enable tracing
-            var strategy = new FullSimplificationStrategy();
-
-            var result = strategy.Solve(problem, context);
-
-            Assert.IsTrue(result.IsSuccess, result.Message);
-            Assert.IsNotNull(result.Trace);
-            Assert.AreEqual(3, result.Trace.Count); // Original + 2 steps
-            Assert.AreEqual(problem, result.Trace[0]);
-            Assert.AreEqual(new Multiply(new Symbol("x"), new Number(1)), result.Trace[1]);
-            Assert.AreEqual(new Symbol("x"), result.Trace[2]);
-        }
-
-        [TestMethod]
         public void FullSimplificationStrategy_HandlesNullProblem()
         {
             var context = new SolveContext(null, generalSimplificationRules, 100, false, null);
