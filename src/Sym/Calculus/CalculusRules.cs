@@ -1,119 +1,132 @@
-//Copyright Warren Harding 2025.
+// Copyright Warren Harding 2025
 using Sym.Core;
 using Sym.Atoms;
 using Sym.Operations;
 using System.Collections.Immutable;
-using System;
+using System.Collections.Generic; // Required for ImmutableDictionary<string, IExpression> bindings
 
 namespace Sym.Calculus
 {
     /// <summary>
-    /// Provides a collection of standard rewrite rules for basic calculus operations.
+    /// Provides a static collection of calculus rules (differentiation, integration, and vector calculus)
+    /// for the Sym symbolic mathematics system.
     /// </summary>
     public static class CalculusRules
     {
-        // Define common wildcards for clarity and reusability
-        private static readonly Wild _wildF = new Wild("f");
-        private static readonly Wild _wildG = new Wild("g");
+        // Wildcard declarations
         private static readonly Wild _wildX = new Wild("x");
-        private static readonly Wild _wildC = new Wild("c", WildConstraint.Constant);
+        private static readonly Wild _wildY = new Wild("y");
+        private static readonly Wild _wildF = new Wild("f");
         private static readonly Wild _wildN = new Wild("n");
-        private static readonly Wild _wildV = new Wild("v");
+        private static readonly Wild _wildC = new Wild("c"); // For general constant values
 
-        // New wildcards for Div/Curl vector components
-        private static readonly Wild _wildFx = new Wild("fx");
-        private static readonly Wild _wildFy = new Wild("fy");
-        private static readonly Wild _wildFz = new Wild("fz");
-        private static readonly Wild _wildVarX = new Wild("varX");
-        private static readonly Wild _wildVarY = new Wild("varY");
-        private static readonly Wild _wildVarZ = new Wild("varZ");
-
-        // Specific symbols for common 3D Cartesian coordinates, as needed by some rules
-        // These are only for _symX, _symY, _symZ, their usage eliminated from Grad rule as per plan.
-        private static readonly Symbol _symX = new Symbol("x");
-        private static readonly Symbol _symY = new Symbol("y");
-        private static readonly Symbol _symZ = new Symbol("z");
-
+        // New wildcards for general expressions as vector components, and for variables
+        private static readonly Wild _wildExp1 = new Wild("exp1");
+        private static readonly Wild _wildExp2 = new Wild("exp2");
+        private static readonly Wild _wildExp3 = new Wild("exp3");
+        private static readonly Wild _wildVar1 = new Wild("var1");
+        private static readonly Wild _wildVar2 = new Wild("var2");
+        private static readonly Wild _wildVar3 = new Wild("var3");
 
         /// <summary>
-        /// Rules for symbolic differentiation.
+        /// Gets the immutable list of differentiation rules.
         /// </summary>
         public static ImmutableList<Rule> DifferentiationRules { get; }
 
         /// <summary>
-        /// Rules for symbolic integration.
+        /// Gets the immutable list of integration rules.
         /// </summary>
         public static ImmutableList<Rule> IntegrationRules { get; }
 
         /// <summary>
-        /// Rules for vector calculus operations (Grad, Div, Curl).
+        /// Gets the immutable list of vector calculus rules.
         /// </summary>
         public static ImmutableList<Rule> VectorCalculusRules { get; }
 
+        /// <summary>
+        /// Initializes the <see cref="CalculusRules"/> class, populating the calculus rules.
+        /// </summary>
         static CalculusRules()
         {
-            // Initialize Differentiation Rules
-            DifferentiationRules = ImmutableList.Create(
-                // Rule: d/dx (c) = 0
+            DifferentiationRules = ImmutableList.Create<Rule>(
+                // Rule: d/d(x) (f) = 0 if f does not contain x. This handles symbols (e.g., d/dx(y)=0) and numbers correctly.
                 new Rule(
-                    new Derivative(_wildC, _wildX),
-                    new Number(0m)
+                    new Derivative(_wildF, _wildX),
+                    new Number(0m),
+                    (ImmutableDictionary<string, IExpression> bindings) =>
+                    {
+                        if (bindings.TryGetValue("f", out IExpression? matchedF) &&
+                            bindings.TryGetValue("x", out IExpression? matchedX) && matchedX is Symbol targetVar)
+                        {
+                            // Assuming IExpression has a ContainsSymbol method.
+                            return !matchedF.ContainsSymbol(targetVar);
+                        }
+                        return false;
+                    }
                 ),
                 // Rule: d/dx (x) = 1
                 new Rule(
                     new Derivative(_wildX, _wildX),
                     new Number(1m)
                 ),
-                // Rule: d/dx (f + g) = d/dx (f) + d/dx (g) (Sum Rule)
+                // Sum rule: d/dx (f + g) = d/dx(f) + d/dx(g)
                 new Rule(
-                    new Derivative(new Add(ImmutableList.Create<IExpression>(_wildF, _wildG)), _wildX),
-                    new Add(ImmutableList.Create<IExpression>(new Derivative(_wildF, _wildX), new Derivative(_wildG, _wildX)))
+                    new Derivative(new Add(_wildF, _wildY), _wildX),
+                    new Add(new Derivative(_wildF, _wildX), new Derivative(_wildY, _wildX))
                 ),
-                // Rule: d/dx (f * g) = f'g + fg' (Product Rule)
+                // Product rule: d/dx (f * g) = g*d/dx(f) + f*d/dx(g)
                 new Rule(
-                    new Derivative(new Multiply(ImmutableList.Create<IExpression>(_wildF, _wildG)), _wildX),
-                    new Add(ImmutableList.Create<IExpression>(
-                        new Multiply(ImmutableList.Create<IExpression>(new Derivative(_wildF, _wildX), _wildG)),
-                        new Multiply(ImmutableList.Create<IExpression>(_wildF, new Derivative(_wildG, _wildX)))
-                    ))
+                    new Derivative(new Multiply(_wildF, _wildY), _wildX),
+                    new Add(
+                        new Multiply(_wildY, new Derivative(_wildF, _wildX)),
+                        new Multiply(_wildF, new Derivative(_wildY, _wildX))
+                    )
                 ),
-                // Rule: d/dx (f^n) = n * f^(n-1) * f' (Power Rule with Chain Rule for f)
+                // Power rule (with chain rule): d/dx(f^n) = n * f^(n-1) * d/dx(f), for n that is constant w.r.t x.
                 new Rule(
-                    new Derivative(new Power(_wildF, _wildN), _wildX), // d/dx(f^n)
-                    new Multiply(ImmutableList.Create<IExpression>(
-                        _wildN,
-                        new Power(_wildF, new Add(ImmutableList.Create<IExpression>(_wildN, new Number(-1m)))), // n * f^(n-1)
-                        new Derivative(_wildF, _wildX) // * f' (chain rule)
-                    )),
-                    // Condition: n must be a number for this particular rule, but f can be anything.
-                    (bindings) => bindings.TryGetValue("n", out IExpression? matchedN) && matchedN is Number
-                ),
-                // Rule: d/dx (sin(f)) = cos(f) * f' (Chain Rule for Sin)
-                new Rule(
-                    new Derivative(new Function("sin", ImmutableList.Create<IExpression>(_wildF)), _wildX),
-                    new Multiply(ImmutableList.Create<IExpression>(
-                        new Function("cos", ImmutableList.Create<IExpression>(_wildF)),
+                    new Derivative(new Power(_wildF, _wildN), _wildX),
+                    new Multiply(
+                        new Multiply(_wildN, new Power(_wildF, new Add(_wildN, new Number(-1m)))),
                         new Derivative(_wildF, _wildX)
-                    ))
+                    ),
+                    (ImmutableDictionary<string, IExpression> bindings) =>
+                    {
+                        if (bindings.TryGetValue("n", out var n) &&
+                            bindings.TryGetValue("x", out var x) && x is Symbol var)
+                        {
+                            return !n.ContainsSymbol(var);
+                        }
+                        return false;
+                    }
                 )
             );
 
-            // Initialize Integration Rules
-            IntegrationRules = ImmutableList.Create(
+            IntegrationRules = ImmutableList.Create<Rule>(
                 // Rule: Integral(0, x) = 0
                 new Rule(
                     new Integral(new Number(0m), _wildX),
                     new Number(0m)
                 ),
+                // Rule: Integral(c, x) = c * x (for constant c, typically a Number)
+                new Rule(
+                    new Integral(_wildC, _wildX),
+                    new Multiply(_wildC, _wildX),
+                    (ImmutableDictionary<string, IExpression> bindings) => bindings.TryGetValue("c", out IExpression? mc) && mc is Number
+                ),
+                // Rule: Integral(c * f, x) = c * Integral(f, x) (Constant Multiple Rule)
+                new Rule(
+                    new Integral(new Multiply(_wildC, _wildF), _wildX),
+                    new Multiply(_wildC, new Integral(_wildF, _wildX)),
+                    (ImmutableDictionary<string, IExpression> bindings) => bindings.TryGetValue("c", out IExpression? matchedC) && matchedC is Number &&
+                                  bindings.TryGetValue("x", out IExpression? matchedX) && matchedX is Symbol targetVar &&
+                                  !matchedC.ContainsSymbol(targetVar) // Ensure constant does not contain integration variable
+                ),
                 // Rule: Integral(x^n, x) = x^(n+1) / (n+1), for n != -1
                 new Rule(
                     new Integral(new Power(_wildX, _wildN), _wildX),
-                    new Multiply(ImmutableList.Create<IExpression>(
-                        new Power(_wildX, new Add(ImmutableList.Create<IExpression>(_wildN, new Number(1m)))),
-                        new Power(new Add(ImmutableList.Create<IExpression>(_wildN, new Number(1m))), new Number(-1m))
-                    )),
-                    // Condition: n must not be -1
-                    (bindings) => bindings.TryGetValue("n", out IExpression? matchedN) && matchedN is Number numN && numN.Value != -1m
+                    new Multiply(new Power(_wildX, new Add(_wildN, new Number(1m))),
+                                 new Power(new Add(_wildN, new Number(1m)), new Number(-1m))),
+                    (ImmutableDictionary<string, IExpression> bindings) => bindings.TryGetValue("n", out IExpression? mn) && mn is Number numN && numN.Value != -1m
                 ),
                 // Rule: Integral(cos(x), x) = sin(x)
                 new Rule(
@@ -122,49 +135,61 @@ namespace Sym.Calculus
                 )
             );
 
-            // Initialize Vector Calculus Rules
-            VectorCalculusRules = ImmutableList.Create(
-                // Rule: Grad(f, v) -> Vector(d/dx, d/dy, d/dz) for v = (x, y, z) dynamically matched
+            VectorCalculusRules = ImmutableList.Create<Rule>(
+                // Updated: Grad(f, Vector(var1, var2, var3)) - original 3D rule, using new wildcards
                 new Rule(
                     new Grad(_wildF,
-                        new Vector(ImmutableList.Create<IExpression>( // Pattern for a vector variable with wildcard components
-                            _wildVarX,
-                            _wildVarY,
-                            _wildVarZ
-                        ))
+                        new Vector(ImmutableList.Create<IExpression>(_wildVar1, _wildVar2, _wildVar3))
                     ),
                     new Vector(ImmutableList.Create<IExpression>(
-                        new Derivative(_wildF, _wildVarX), // Use the wildcard-bound components in replacement
-                        new Derivative(_wildF, _wildVarY),
-                        new Derivative(_wildF, _wildVarZ)
+                        new Derivative(_wildF, _wildVar1),
+                        new Derivative(_wildF, _wildVar2),
+                        new Derivative(_wildF, _wildVar3)
                     ))
                 ),
-                // Rule: Div(Vector(fx, fy, fz), Vector(varX, varY, varZ)) = dfx/dvarX + dfy/dvarY + dfz/dvarZ (3D)
+                // NEW: Grad(f, Vector(var1, var2)) - 2D version
+                new Rule(
+                    new Grad(_wildF,
+                        new Vector(ImmutableList.Create<IExpression>(_wildVar1, _wildVar2))
+                    ),
+                    new Vector(ImmutableList.Create<IExpression>(
+                        new Derivative(_wildF, _wildVar1),
+                        new Derivative(_wildF, _wildVar2)
+                    ))
+                ),
+                // Updated: Div(Vector(exp1, exp2, exp3), Vector(var1, var2, var3)) - original 3D rule, using new wildcards
                 new Rule(
                     new Div(
-                        new Vector(ImmutableList.Create<IExpression>(_wildFx, _wildFy, _wildFz)),
-                        new Vector(ImmutableList.Create<IExpression>(_wildVarX, _wildVarY, _wildVarZ))
+                        new Vector(ImmutableList.Create<IExpression>(_wildExp1, _wildExp2, _wildExp3)),
+                        new Vector(ImmutableList.Create<IExpression>(_wildVar1, _wildVar2, _wildVar3))
                     ),
                     new Add(ImmutableList.Create<IExpression>(
-                        new Derivative(_wildFx, _wildVarX),
-                        new Derivative(_wildFy, _wildVarY),
-                        new Derivative(_wildFz, _wildVarZ)
+                        new Derivative(_wildExp1, _wildVar1),
+                        new Derivative(_wildExp2, _wildVar2),
+                        new Derivative(_wildExp3, _wildVar3)
                     ))
                 ),
-                // Rule: Curl(Vector(fx, fy, fz), Vector(varX, varY, varZ)) (3D)
-                // = Vector(dfz/dvarY - dfy/dvarZ, dfx/dvarZ - dfz/dvarX, dfy/dvarX - dfx/dvarY)
+                // NEW: Div(Vector(exp1, exp2), Vector(var1, var2)) - 2D version
+                new Rule(
+                    new Div(
+                        new Vector(ImmutableList.Create<IExpression>(_wildExp1, _wildExp2)),
+                        new Vector(ImmutableList.Create<IExpression>(_wildVar1, _wildVar2))
+                    ),
+                    new Add(ImmutableList.Create<IExpression>(
+                        new Derivative(_wildExp1, _wildVar1),
+                        new Derivative(_wildExp2, _wildVar2)
+                    ))
+                ),
+                // Updated: Curl(Vector(exp1, exp2, exp3), Vector(var1, var2, var3)) - original 3D rule, using new wildcards
                 new Rule(
                     new Curl(
-                        new Vector(ImmutableList.Create<IExpression>(_wildFx, _wildFy, _wildFz)),
-                        new Vector(ImmutableList.Create<IExpression>(_wildVarX, _wildVarY, _wildVarZ))
+                        new Vector(ImmutableList.Create<IExpression>(_wildExp1, _wildExp2, _wildExp3)),
+                        new Vector(ImmutableList.Create<IExpression>(_wildVar1, _wildVar2, _wildVar3))
                     ),
                     new Vector(ImmutableList.Create<IExpression>(
-                        // Component 1: dfz/dvarY - dfy/dvarZ
-                        new Add(ImmutableList.Create<IExpression>(new Derivative(_wildFz, _wildVarY), new Multiply(ImmutableList.Create<IExpression>(new Number(-1m), new Derivative(_wildFy, _wildVarZ))))),
-                        // Component 2: dfx/dvarZ - dfz/dvarX
-                        new Add(ImmutableList.Create<IExpression>(new Derivative(_wildFx, _wildVarZ), new Multiply(ImmutableList.Create<IExpression>(new Number(-1m), new Derivative(_wildFz, _wildVarX))))),
-                        // Component 3: dfy/dvarX - dfx/dvarY
-                        new Add(ImmutableList.Create<IExpression>(new Derivative(_wildFy, _wildVarX), new Multiply(ImmutableList.Create<IExpression>(new Number(-1m), new Derivative(_wildFx, _wildVarY)))))
+                        new Add(new Derivative(_wildExp3, _wildVar2), new Multiply(new Number(-1m), new Derivative(_wildExp2, _wildVar3))),
+                        new Add(new Derivative(_wildExp1, _wildVar3), new Multiply(new Number(-1m), new Derivative(_wildExp3, _wildVar1))),
+                        new Add(new Derivative(_wildExp2, _wildVar1), new Multiply(new Number(-1m), new Derivative(_wildExp1, _wildVar2)))
                     ))
                 )
             );
