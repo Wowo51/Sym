@@ -30,6 +30,8 @@ Using analytic FLOP/byte models and Amdahl‑law projections, realistic incremen
 
 In this work, Sym is used as a *tensor equation optimizer*: you express a transformer subgraph (or an algebraic derivation of one) as a symbolic tensor equation with symbolic dimensions; Sym applies rewrite rules under shape constraints; a GPU‑oriented cost model scores candidates; then Sym outputs a canonicalized “best” equation.
 
+The version of Sym used to do this work on inference has not been released.
+
 ---
 
 ## 2. Baseline: what “SOTA transformer inference” already does
